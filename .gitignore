@@ -325,6 +325,3 @@ src/assets/fonts/yowza/*.otf
 
 # Graphify generated output (keep local, can be regenerated)
 graphify-out/
-
-# Graphify generated output (keep local, can be regenerated)
-graphify-out/
