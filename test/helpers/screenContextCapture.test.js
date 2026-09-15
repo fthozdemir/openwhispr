@@ -28,7 +28,7 @@ function fakeImage(bytesAtQuality, { edge = 1568, resizes = [] } = {}) {
 // The module reads `process.platform` when called, not when imported, so the
 // override has to outlive the import — otherwise the darwin-only permission
 // branch is skipped on Linux CI and every status looks granted.
-function loadCapture(t, { image, platform = "darwin", accessStatus = "granted" }) {
+function loadCapture(t, { image, sources, platform = "darwin", accessStatus = "granted" }) {
   delete require.cache[modulePath];
   let currentAccessStatus = accessStatus;
   const calls = {
@@ -64,8 +64,9 @@ function loadCapture(t, { image, platform = "darwin", accessStatus = "granted" }
           },
         },
         desktopCapturer: {
-          getSources: async ({ thumbnailSize }) => {
+          getSources: async ({ thumbnailSize, types }) => {
             calls.thumbnailSizes.push(thumbnailSize);
+            if (sources) return sources(types);
             return [{ display_id: "1", thumbnail: image }];
           },
         },
@@ -220,4 +221,40 @@ test("without a target rect the cursor's screen is still used", async (t) => {
 
   assert.deepEqual(calls.matchedRects, []);
   assert.equal(calls.thumbnailSizes[0].width, 1568);
+});
+
+test("Interview capture lists windows without returning image data", async (t) => {
+  const image = fakeImage(() => 300_000);
+  const { capture } = loadCapture(t, {
+    image,
+    sources: () => [
+      { id: "window:1", name: "Video call", thumbnail: image },
+      { id: "window:2", name: "IDE", thumbnail: image },
+    ],
+  });
+
+  assert.deepEqual(await capture.listWindowSources(), [
+    { id: "window:1", name: "Video call" },
+    { id: "window:2", name: "IDE" },
+  ]);
+});
+
+test("Interview capture returns only the selected live window", async (t) => {
+  const first = fakeImage(() => 300_000);
+  const second = fakeImage(() => 300_000);
+  second.toJPEG = (quality) => ({
+    length: 300_000,
+    toString: () => Buffer.from(`selected-${quality}`).toString("base64"),
+  });
+  const { capture } = loadCapture(t, {
+    image: first,
+    sources: () => [
+      { id: "window:1", name: "Video call", thumbnail: first },
+      { id: "window:2", name: "IDE", thumbnail: second },
+    ],
+  });
+
+  const result = await capture.captureWindow("window:2");
+  assert.equal(Buffer.from(result.data, "base64").toString(), "selected-82");
+  assert.equal(await capture.captureWindow("window:missing"), null);
 });

@@ -86,6 +86,25 @@ contextBridge.exposeInMainWorld("electronAPI", {
     ipcRenderer.invoke("paste-at-captured-target", sessionId, text, options),
   hideWindow: () => ipcRenderer.invoke("hide-window"),
   showDictationPanel: () => ipcRenderer.invoke("show-dictation-panel"),
+  openInterviewWindow: (launchConfig) => ipcRenderer.invoke("open-interview-window", launchConfig),
+  getInterviewLaunchConfig: () => ipcRenderer.invoke("get-interview-launch-config"),
+  closeInterviewWindow: () => ipcRenderer.invoke("close-interview-window"),
+  getInterviewWindowBounds: () => ipcRenderer.invoke("get-interview-window-bounds"),
+  resizeInterviewWindow: (width, height) =>
+    ipcRenderer.invoke("resize-interview-window", width, height),
+  moveInterviewWindow: (x, y) => ipcRenderer.invoke("move-interview-window", x, y),
+  setInterviewWindowInteractivity: (interactive) =>
+    ipcRenderer.invoke("set-interview-window-interactivity", interactive),
+  registerInterviewHotkeys: (hotkeys) => ipcRenderer.invoke("register-interview-hotkeys", hotkeys),
+  getInterviewPhoneRemote: () => ipcRenderer.invoke("get-interview-phone-remote"),
+  onInterviewAction: registerListener(
+    "interview-action",
+    (callback) => (_event, action) => callback(action)
+  ),
+  onInterviewCloseRequested: registerListener(
+    "interview-close-requested",
+    (callback) => () => callback()
+  ),
   captureDictationTarget: () => ipcRenderer.invoke("capture-dictation-target"),
   onToggleDictation: registerListener("toggle-dictation", (callback) => () => callback()),
   onToggleVoiceAgent: registerListener("toggle-voice-agent", (callback) => () => callback()),
@@ -748,6 +767,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
   checkScreenRecordingAccess: () => ipcRenderer.invoke("check-screen-recording-access"),
   requestScreenRecordingAccess: () => ipcRenderer.invoke("request-screen-recording-access"),
   captureScreenContext: () => ipcRenderer.invoke("capture-screen-context"),
+  listInterviewCaptureSources: () => ipcRenderer.invoke("list-interview-capture-sources"),
+  captureInterviewSource: (sourceId) => ipcRenderer.invoke("capture-interview-source", sourceId),
   setScreenContextEnabled: (enabled) => ipcRenderer.invoke("screen-context-set-enabled", enabled),
   toggleMediaPlayback: () => ipcRenderer.invoke("toggle-media-playback"),
   pauseMediaPlayback: () => ipcRenderer.invoke("pause-media-playback"),

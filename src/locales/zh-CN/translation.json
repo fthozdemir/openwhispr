@@ -1455,6 +1455,10 @@
         "description": "外观、声音与启动",
         "label": "偏好设置"
       },
+      "interview": {
+        "description": "提示词、上下文压缩和快捷键",
+        "label": "面试"
+      },
       "hotkeys": {
         "description": "听写快捷键与激活模式",
         "label": "快捷键"
@@ -1483,6 +1487,23 @@
     "title": "设置"
   },
   "settingsPage": {
+    "interview": {
+      "systemPromptTitle": "面试系统提示词",
+      "systemPromptDescription": "三个面试回答命令共用的行为指令。回答协议会单独强制执行。",
+      "compactionTitle": "自动上下文压缩",
+      "compactionDescription": "压缩独立运行，从不等待或取消回答请求。",
+      "contextBudget": "上下文预算",
+      "contextBudgetDescription": "对话历史的大致 token 预算，摘要大小由此推算。用户数据和系统提示词不计入。",
+      "shortcutsTitle": "面试快捷键",
+      "shortcutsDescription": "这些快捷键仅在面试窗口打开时注册。",
+      "conversationShortcut": "根据对话回答",
+      "screenshotShortcut": "根据截图回答",
+      "screenshotConversationShortcut": "截图和对话",
+      "shortcutInUse": "此快捷键已被另一个面试操作使用。",
+      "windowTitle": "面试窗口",
+      "windowDescription": "如果回答在屏幕上难以阅读，请提高背景不透明度。",
+      "backgroundOpacity": "背景不透明度"
+    },
     "unifiedBilling": {
       "workspaceTitle": "工作区账单",
       "workspaceDescription": "每个工作区都有自己的套餐、席位和账单负责人。",
@@ -3431,6 +3452,7 @@
     }
   },
   "sidebar": {
+    "interview": "面试",
     "insights": "统计",
     "home": "首页",
     "notes": "笔记",
@@ -4122,6 +4144,47 @@
     "activeTarget": "当前目标语言",
     "removeTarget": "移除{{language}}",
     "maxTargets": "最多 {{max}} 种语言"
+  },
+  "interviewSetup": {
+    "title": "准备面试",
+    "description": "打开面试模式前，请选择本次会话的上下文。",
+    "aiModel": "AI 模型",
+    "aiModelSameAsChat": "面试模式使用与聊天相同的 AI 模型。",
+    "changeModel": "更改",
+    "modelNotSelected": "未选择模型",
+    "captureWindow": "捕获窗口",
+    "noWindows": "没有可用窗口",
+    "refreshWindows": "刷新捕获窗口",
+    "userData": "用户数据",
+    "savedOnDevice": "保存在此设备上",
+    "userDataPlaceholder": "粘贴简历、职位背景、公司备注或其他个人上下文…",
+    "userDataLarge": "用户数据约 {{tokens}} 个 token，超过建议的 {{limit}}。每次回答都会变慢，请求也可能超出上下文预算。",
+    "start": "开始面试",
+    "starting": "正在启动…",
+    "stop": "停止",
+    "continue": "继续",
+    "errors": {
+      "listWindows": "无法列出窗口。",
+      "selectWindow": "请选择要捕获的窗口。",
+      "openFailed": "无法打开面试模式。",
+      "alreadyOpen": "面试会话已打开。",
+      "missingSetup": "面试设置不可用。请关闭此窗口，然后从面试标签页重新开始。"
+    }
+  },
+  "interviewWindow": {
+    "liveConversation": "实时对话",
+    "collapseLiveConversation": "折叠实时对话",
+    "expandLiveConversation": "展开实时对话",
+    "moveWindow": "移动窗口"
+  },
+  "interviewPhoneRemote": {
+    "title": "面试遥控器",
+    "description": "选择下一次回答使用的上下文。",
+    "conversation": "对话",
+    "screenshot": "屏幕截图",
+    "screenshotConversation": "屏幕截图 + 对话",
+    "urlLabel": "手机网址",
+    "unavailable": "本地网络中无法使用手机遥控器。"
   },
   "meetingNotification": {
     "title": "检测到会议",

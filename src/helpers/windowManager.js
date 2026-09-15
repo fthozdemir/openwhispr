@@ -29,6 +29,7 @@ const DRAG_MOVE_TOLERANCE_PX = 2;
 const {
   MAIN_WINDOW_CONFIG,
   CONTROL_PANEL_CONFIG,
+  INTERVIEW_WINDOW_CONFIG,
   ONBOARDING_WINDOW_SIZES,
   NOTIFICATION_WINDOW_CONFIG,
   fitAssistantContentWindowToWorkArea,
@@ -43,11 +44,27 @@ const AGENT_DICTATION_PILL_SIZE = Object.freeze({ ...WINDOW_SIZES.BASE });
 const { centeredBounds, clampedBounds } = require("./onboardingWindowBounds");
 const { ONBOARDING_DEMO_KINDS, isOnboardingInputAllowed } = require("./onboardingInputPolicy");
 const { createHotkeyRepeatGate } = require("./hotkeyRepeatGate");
+const { InterviewPhoneRemote } = require("./interviewPhoneRemote");
+const { normalizeInterviewLaunchConfig } = require("./interviewLaunchConfig");
 
 class WindowManager {
   constructor() {
     this.mainWindow = null;
     this.controlPanelWindow = null;
+    this.interviewWindow = null;
+    this._interviewLaunchConfig = null;
+    this._interviewCloseApproved = false;
+    this.interviewPhoneRemote = new InterviewPhoneRemote({
+      onAction: (action) => this.dispatchInterviewAction(action),
+      labels: () => ({
+        language: i18nMain.resolvedLanguage || i18nMain.language || "en",
+        title: i18nMain.t("interviewPhoneRemote.title"),
+        description: i18nMain.t("interviewPhoneRemote.description"),
+        conversation: i18nMain.t("interviewPhoneRemote.conversation"),
+        screenshot: i18nMain.t("interviewPhoneRemote.screenshot"),
+        screenshotConversation: i18nMain.t("interviewPhoneRemote.screenshotConversation"),
+      }),
+    });
     this._resizeMaskTokenCounter = 0;
     this._controlPanelVisibilityTimer = null;
     this._onboardingRestoreBounds = null;
@@ -104,6 +121,7 @@ class WindowManager {
     app.on("before-quit", () => {
       this.isQuitting = true;
       this.hotkeyManager.unregisterAll();
+      void this.stopInterviewPhoneRemote();
     });
   }
 
@@ -1394,6 +1412,214 @@ class WindowManager {
     await this.loadControlPanel();
   }
 
+  async createInterviewWindow(launchConfig) {
+    const normalizedLaunchConfig = normalizeInterviewLaunchConfig(launchConfig);
+    if (!normalizedLaunchConfig) {
+      return { success: false, error: i18nMain.t("interviewSetup.errors.selectWindow") };
+    }
+
+    if (this.interviewWindow && !this.interviewWindow.isDestroyed()) {
+      return { success: false, error: i18nMain.t("interviewSetup.errors.alreadyOpen") };
+    }
+
+    this._interviewLaunchConfig = normalizedLaunchConfig;
+    const win = new BrowserWindow(INTERVIEW_WINDOW_CONFIG);
+    this.interviewWindow = win;
+    this._interviewCloseApproved = false;
+
+    win.webContents.on("will-navigate", (event, url) => {
+      const appUrl =
+        DevServerManager.getAppUrl(true) ??
+        pathToFileURL(DevServerManager.getAppFilePath(true).path).href;
+      if (isAllowedAppNavigation(url, appUrl)) return;
+      event.preventDefault();
+      if (isExternalBrowserUrl(url)) this.openExternalUrl(url);
+    });
+    win.webContents.setWindowOpenHandler(({ url }) => {
+      this.openExternalUrl(url);
+      return { action: "deny" };
+    });
+    win.webContents.on("render-process-gone", (_event, details) => {
+      debugLogger.error(
+        "Interview renderer process gone",
+        { reason: details.reason, exitCode: details.exitCode },
+        "window"
+      );
+      if (!win.isDestroyed()) {
+        this._interviewCloseApproved = true;
+        win.close();
+      }
+    });
+
+    win.on("close", (event) => {
+      if (this.isQuitting || this._interviewCloseApproved) return;
+      event.preventDefault();
+      if (!win.webContents.isDestroyed()) win.webContents.send("interview-close-requested");
+    });
+    win.on("closed", () => {
+      if (this.interviewWindow !== win) return;
+      this.unregisterInterviewHotkeys();
+      this.interviewWindow = null;
+      this._interviewLaunchConfig = null;
+      this._interviewCloseApproved = false;
+    });
+    win.once("ready-to-show", () => {
+      if (this.interviewWindow !== win) return;
+      WindowPositionUtil.setupAlwaysOnTop(win);
+      this._applyMacClickThrough(win, true);
+      win.showInactive();
+    });
+
+    try {
+      if (process.env.NODE_ENV === "development") {
+        await DevServerManager.waitForDevServer();
+        await win.loadURL(`${DevServerManager.DEV_SERVER_URL}?panel=true&interview=true`);
+      } else {
+        const fileInfo = DevServerManager.getAppFilePath(true);
+        if (!fileInfo) throw new Error("Failed to get app file path");
+        await win.loadFile(fileInfo.path, {
+          query: { ...fileInfo.query, interview: "true" },
+        });
+      }
+      return { success: true };
+    } catch (error) {
+      debugLogger.error("Failed to load Interview window", { error: error.message }, "window");
+      if (!win.isDestroyed()) {
+        this._interviewCloseApproved = true;
+        win.close();
+      }
+      return { success: false, error: error.message };
+    }
+  }
+
+  getInterviewLaunchConfig() {
+    return this._interviewLaunchConfig;
+  }
+
+  closeInterviewWindow() {
+    const win = this.interviewWindow;
+    if (!win || win.isDestroyed()) return { success: true };
+    this._interviewCloseApproved = true;
+    win.close();
+    return { success: true };
+  }
+
+  getInterviewWindowBounds() {
+    const win = this.interviewWindow;
+    return !win || win.isDestroyed() ? null : win.getBounds();
+  }
+
+  // The Interview window lets clicks and wheel events through to the app
+  // beneath and catches the pointer only over its controls, which the renderer
+  // reports on hover (macOS only, see _applyMacClickThrough).
+  setInterviewWindowInteractivity(sender, interactive) {
+    const win = this.interviewWindow;
+    if (!win || win.isDestroyed() || sender !== win.webContents) return;
+    this._applyMacClickThrough(win, !interactive);
+  }
+
+  getInterviewWindowMediaSourceId() {
+    const win = this.interviewWindow;
+    if (!win || win.isDestroyed()) return null;
+    try {
+      return win.getMediaSourceId();
+    } catch {
+      return null;
+    }
+  }
+
+  resizeInterviewWindow(width, height) {
+    const win = this.interviewWindow;
+    if (!win || win.isDestroyed()) return { success: false, error: "Window not available" };
+    const current = win.getBounds();
+    const display = screen.getDisplayMatching(current);
+    const workArea = display.workArea || display.bounds;
+    const availableWidth = workArea.x + workArea.width - current.x;
+    const availableHeight = workArea.y + workArea.height - current.y;
+    const nextWidth = Math.max(
+      INTERVIEW_WINDOW_CONFIG.minWidth,
+      Math.min(availableWidth, Math.round(Number(width)))
+    );
+    const nextHeight = Math.max(
+      INTERVIEW_WINDOW_CONFIG.minHeight,
+      Math.min(availableHeight, Math.round(Number(height)))
+    );
+    if (!Number.isFinite(nextWidth) || !Number.isFinite(nextHeight)) {
+      return { success: false, error: "Invalid window size" };
+    }
+    win.setBounds({ ...current, width: nextWidth, height: nextHeight });
+    return { success: true, bounds: win.getBounds() };
+  }
+
+  // Driven by the grip, which stays under the pointer and so on screen. The
+  // top edge is kept inside the work area: the floating level sits below the
+  // macOS menu bar, which would otherwise swallow the grip.
+  moveInterviewWindow(x, y) {
+    const win = this.interviewWindow;
+    if (!win || win.isDestroyed()) return { success: false, error: "Window not available" };
+    const nextX = Math.round(Number(x));
+    const nextY = Math.round(Number(y));
+    if (!Number.isFinite(nextX) || !Number.isFinite(nextY)) {
+      return { success: false, error: "Invalid window position" };
+    }
+    const display = screen.getDisplayNearestPoint({ x: nextX, y: nextY });
+    const workArea = display.workArea || display.bounds;
+    win.setPosition(nextX, Math.max(workArea.y, nextY));
+    return { success: true };
+  }
+
+  async registerInterviewHotkeys(hotkeys = {}) {
+    const actions = [
+      ["interviewConversation", "conversation", hotkeys.conversation],
+      ["interviewScreenshot", "screenshot", hotkeys.screenshot],
+      [
+        "interviewScreenshotConversation",
+        "screenshot-conversation",
+        hotkeys.screenshotConversation,
+      ],
+    ];
+
+    this.unregisterInterviewHotkeys();
+    for (const [slot, action, accelerator] of actions) {
+      if (typeof accelerator !== "string" || !accelerator.trim()) continue;
+      const result = await this.hotkeyManager.registerSlot(slot, accelerator, () => {
+        this.dispatchInterviewAction(action);
+      });
+      if (!result.success) {
+        this.unregisterInterviewHotkeys();
+        return { success: false, error: result.error };
+      }
+    }
+    return { success: true };
+  }
+
+  dispatchInterviewAction(action) {
+    const active = this.interviewWindow;
+    if (!active || active.isDestroyed() || active.webContents.isDestroyed?.()) return false;
+    active.webContents.send("interview-action", action);
+    return true;
+  }
+
+  async getInterviewPhoneRemoteInfo() {
+    try {
+      const info = await this.interviewPhoneRemote.start();
+      return { success: true, ...info };
+    } catch (error) {
+      debugLogger.warn("Interview phone remote unavailable", { error: error.message }, "window");
+      return { success: false, error: i18nMain.t("interviewPhoneRemote.unavailable") };
+    }
+  }
+
+  async stopInterviewPhoneRemote() {
+    await this.interviewPhoneRemote.stop();
+  }
+
+  unregisterInterviewHotkeys() {
+    this.hotkeyManager.unregisterSlot("interviewConversation");
+    this.hotkeyManager.unregisterSlot("interviewScreenshot");
+    this.hotkeyManager.unregisterSlot("interviewScreenshotConversation");
+  }
+
   async loadControlPanel() {
     await this.loadWindowContent(this.controlPanelWindow, true);
   }
@@ -1862,7 +2088,7 @@ class WindowManager {
       // The companion exists only while the content-protected Agent panel is
       // open; keep it out of screen shares along with the panel it accompanies.
       pillWindow.setContentProtection(true);
-      this._applyAgentDictationPillClickThrough(pillWindow, true);
+      this._applyMacClickThrough(pillWindow, true);
 
       pillWindow.on("closed", () => {
         if (this.agentDictationPillWindow !== pillWindow) return;
@@ -1927,7 +2153,7 @@ class WindowManager {
     if (this._agentDictationPillReady) pillWindow.webContents.send("preview-hide");
     // A hover-captured window never sees its mouseleave once hidden; reset so
     // the next show cannot start out swallowing clicks under stale capture.
-    this._applyAgentDictationPillClickThrough(pillWindow, true);
+    this._applyMacClickThrough(pillWindow, true);
     this._agentDictationPillSize = AGENT_DICTATION_PILL_SIZE;
     this.positionAgentDictationPill();
   }
@@ -1935,19 +2161,19 @@ class WindowManager {
   setAgentDictationPillInteractivity(interactive) {
     const pillWindow = this.agentDictationPillWindow;
     if (!pillWindow || pillWindow.isDestroyed()) return;
-    this._applyAgentDictationPillClickThrough(pillWindow, !interactive);
+    this._applyMacClickThrough(pillWindow, !interactive);
   }
 
-  // Like the dictation pill and meeting notification, the companion is
-  // click-through on macOS so its transparent bounds never swallow clicks
-  // meant for the app beneath; hovering re-captures via IPC. Windows
-  // forwarding is unreliable for floating panels and Linux ignores `forward`
-  // (one hover-out would strand the pill unreachable, #1456), so both keep
-  // normal hit-testing.
-  _applyAgentDictationPillClickThrough(pillWindow, clickThrough) {
+  // Like the dictation pill and meeting notification, the companion pill and the
+  // Interview window are click-through on macOS so their transparent bounds never
+  // swallow clicks meant for the app beneath; hovering re-captures via IPC.
+  // Windows forwarding is unreliable for floating panels and Linux ignores
+  // `forward` (one hover-out would strand the window unreachable, #1456), so both
+  // keep normal hit-testing.
+  _applyMacClickThrough(win, clickThrough) {
     if (process.platform !== "darwin") return;
-    if (clickThrough) pillWindow.setIgnoreMouseEvents(true, { forward: true });
-    else pillWindow.setIgnoreMouseEvents(false);
+    if (clickThrough) win.setIgnoreMouseEvents(true, { forward: true });
+    else win.setIgnoreMouseEvents(false);
   }
 
   isDictationPanelVisible() {

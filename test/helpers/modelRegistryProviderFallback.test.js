@@ -51,3 +51,38 @@ test("gemma fallback does not capture gemini ids or registry cloud gemma models"
     assert.notEqual(getModelProvider(modelId), "local", modelId);
   }
 });
+
+test("OpenRouter model ids fall back to their upstream registry entry", async (t) => {
+  installBrowserGlobals(t, {
+    initialStorage: { _providerSettingsMigrated: "1", cleanupMode: "local" },
+  });
+  const vite = await createRendererServer(t, {
+    cachePrefix: "openwhispr-model-provider-fallback-test-",
+  });
+  const { getCloudModel, getOpenAiApiConfig } = await vite.ssrLoadModule(
+    "/models/ModelRegistry.ts"
+  );
+
+  assert.equal(
+    getCloudModel("google/gemini-3.5-flash-lite", "openrouter")?.id,
+    "gemini-3.5-flash-lite"
+  );
+  assert.equal(getCloudModel("google/gemini-3.5-flash-lite"), undefined);
+  assert.equal(getCloudModel("google/gemini-3.5-flash-lite", "custom"), undefined);
+  assert.deepEqual(getOpenAiApiConfig("anthropic/claude-opus-4-7", "openrouter"), {
+    tokenParam: "max_tokens",
+    supportsTemperature: false,
+  });
+});
+
+test("exact slash-prefixed registry ids still win before OpenRouter normalization", async (t) => {
+  installBrowserGlobals(t, {
+    initialStorage: { _providerSettingsMigrated: "1", cleanupMode: "local" },
+  });
+  const vite = await createRendererServer(t, {
+    cachePrefix: "openwhispr-model-provider-fallback-test-",
+  });
+  const { getCloudModel } = await vite.ssrLoadModule("/models/ModelRegistry.ts");
+
+  assert.equal(getCloudModel("openai/gpt-oss-120b", "openrouter")?.id, "openai/gpt-oss-120b");
+});

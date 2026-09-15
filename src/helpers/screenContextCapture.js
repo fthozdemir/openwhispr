@@ -107,6 +107,51 @@ async function captureActiveDisplay(targetBounds = null) {
   }
 }
 
+async function listWindowSources() {
+  if (getAccessStatus() !== "granted") return [];
+
+  try {
+    const sources = await desktopCapturer.getSources({
+      types: ["window"],
+      thumbnailSize: { width: 1, height: 1 },
+    });
+    return sources.map((source) => ({ id: source.id, name: source.name }));
+  } catch (error) {
+    debugLogger.warn(
+      "Interview capture source listing failed",
+      { error: error.message },
+      "screenContext"
+    );
+    return [];
+  }
+}
+
+async function captureWindow(sourceId) {
+  if (getAccessStatus() !== "granted" || typeof sourceId !== "string" || !sourceId) return null;
+
+  try {
+    const sources = await desktopCapturer.getSources({
+      types: ["window"],
+      thumbnailSize: { width: MAX_EDGE_PX, height: MAX_EDGE_PX },
+    });
+    const source = sources.find((candidate) => candidate.id === sourceId);
+    if (!source || source.thumbnail.isEmpty()) {
+      debugLogger.warn("Interview capture source is no longer available", {}, "screenContext");
+      return null;
+    }
+
+    const encoded = encodeWithinBudget(source.thumbnail);
+    if (!encoded) {
+      debugLogger.warn("Interview window capture is too large to send", {}, "screenContext");
+      return null;
+    }
+    return { mediaType: "image/jpeg", data: encoded.toString("base64") };
+  } catch (error) {
+    debugLogger.warn("Interview window capture failed", { error: error.message }, "screenContext");
+    return null;
+  }
+}
+
 // There is no askForMediaAccess("screen") on macOS; attempting a capture is
 // what registers the app in the Screen Recording TCC list and triggers the
 // one-time OS prompt.
@@ -119,4 +164,11 @@ async function requestAccess() {
   return getAccessStatus();
 }
 
-module.exports = { getAccessStatus, getAccessResult, captureActiveDisplay, requestAccess };
+module.exports = {
+  getAccessStatus,
+  getAccessResult,
+  captureActiveDisplay,
+  listWindowSources,
+  captureWindow,
+  requestAccess,
+};

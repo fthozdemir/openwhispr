@@ -1455,6 +1455,10 @@
         "description": "Aspetto, suoni e avvio",
         "label": "Preferenze"
       },
+      "interview": {
+        "description": "Prompt, compattazione del contesto e scorciatoie",
+        "label": "Colloquio"
+      },
       "hotkeys": {
         "description": "Scorciatoia di dettatura e attivazione",
         "label": "Scorciatoie"
@@ -1483,6 +1487,23 @@
     "title": "Impostazioni"
   },
   "settingsPage": {
+    "interview": {
+      "systemPromptTitle": "Prompt di sistema del colloquio",
+      "systemPromptDescription": "Istruzioni di comportamento usate da tutti e tre i comandi di risposta del colloquio. Il protocollo di risposta viene applicato separatamente.",
+      "compactionTitle": "Compattazione automatica del contesto",
+      "compactionDescription": "La compattazione viene eseguita in modo indipendente e non attende né annulla mai una richiesta di risposta.",
+      "contextBudget": "Budget di contesto",
+      "contextBudgetDescription": "Budget approssimativo di token per la cronologia della conversazione; la dimensione del riepilogo deriva da esso. I dati utente e il prompt di sistema non vengono conteggiati.",
+      "shortcutsTitle": "Scorciatoie del colloquio",
+      "shortcutsDescription": "Queste scorciatoie sono registrate solo mentre la finestra del colloquio è aperta.",
+      "conversationShortcut": "Rispondi dalla conversazione",
+      "screenshotShortcut": "Rispondi dalla schermata",
+      "screenshotConversationShortcut": "Schermata e conversazione",
+      "shortcutInUse": "Questa scorciatoia è già usata da un’altra azione del colloquio.",
+      "windowTitle": "Finestra del colloquio",
+      "windowDescription": "Aumenta l’opacità dello sfondo se le risposte sono difficili da leggere sullo schermo.",
+      "backgroundOpacity": "Opacità dello sfondo"
+    },
     "unifiedBilling": {
       "workspaceTitle": "Fatturazione dell'area di lavoro",
       "workspaceDescription": "Ogni area di lavoro ha il proprio piano, i propri posti e un responsabile della fatturazione.",
@@ -3431,6 +3452,7 @@
     }
   },
   "sidebar": {
+    "interview": "Colloquio",
     "insights": "Statistiche",
     "home": "Home",
     "notes": "Note",
@@ -4122,6 +4144,47 @@
     "activeTarget": "Lingua di destinazione attiva",
     "removeTarget": "Rimuovi {{language}}",
     "maxTargets": "Fino a {{max}} lingue"
+  },
+  "interviewSetup": {
+    "title": "Prepara il colloquio",
+    "description": "Scegli il contesto della sessione prima di aprire la modalità Colloquio.",
+    "aiModel": "Modello IA",
+    "aiModelSameAsChat": "La modalità Colloquio usa lo stesso modello IA della chat.",
+    "changeModel": "Cambia",
+    "modelNotSelected": "Nessun modello selezionato",
+    "captureWindow": "Finestra da acquisire",
+    "noWindows": "Nessuna finestra disponibile",
+    "refreshWindows": "Aggiorna le finestre di acquisizione",
+    "userData": "Dati utente",
+    "savedOnDevice": "Salvato su questo dispositivo",
+    "userDataPlaceholder": "Incolla CV, contesto del ruolo, note sull’azienda o altro contesto personale…",
+    "userDataLarge": "I dati utente occupano circa {{tokens}} token, oltre i {{limit}} consigliati. Ogni risposta sarà più lenta e le richieste possono superare il budget di contesto.",
+    "start": "Avvia colloquio",
+    "starting": "Avvio…",
+    "stop": "Interrompi",
+    "continue": "Riprendi",
+    "errors": {
+      "listWindows": "Impossibile elencare le finestre.",
+      "selectWindow": "Seleziona una finestra da acquisire.",
+      "openFailed": "Impossibile aprire la modalità Colloquio.",
+      "alreadyOpen": "È già aperta una sessione di colloquio.",
+      "missingSetup": "La configurazione del colloquio non è disponibile. Chiudi questa finestra e riprova dalla scheda Colloquio."
+    }
+  },
+  "interviewWindow": {
+    "liveConversation": "Conversazione dal vivo",
+    "collapseLiveConversation": "Comprimi conversazione dal vivo",
+    "expandLiveConversation": "Espandi conversazione dal vivo",
+    "moveWindow": "Sposta finestra"
+  },
+  "interviewPhoneRemote": {
+    "title": "Telecomando colloquio",
+    "description": "Scegli il contesto per la prossima risposta.",
+    "conversation": "Conversazione",
+    "screenshot": "Schermata",
+    "screenshotConversation": "Schermata + conversazione",
+    "urlLabel": "URL del telefono",
+    "unavailable": "Il telecomando del telefono non è disponibile sulla rete locale."
   },
   "meetingNotification": {
     "title": "Riunione rilevata",

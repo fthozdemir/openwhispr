@@ -1,11 +1,27 @@
 import type React from "react";
 import { useTranslation } from "react-i18next";
-import { Home, BarChart3, MessageSquare, NotebookPen, BookOpen, Upload, Blocks } from "./icons";
+import {
+  Home,
+  BarChart3,
+  MessageSquare,
+  NotebookPen,
+  BookOpen,
+  Upload,
+  Blocks,
+  Monitor,
+} from "./icons";
 import { isAgentAllowed, isPolicyActionAllowed } from "../stores/policyRules";
 import { usePolicyStore } from "../stores/policyStore";
 
 export type ControlPanelView =
-  "home" | "insights" | "chat" | "personal-notes" | "dictionary" | "upload" | "integrations";
+  | "home"
+  | "insights"
+  | "chat"
+  | "interview"
+  | "personal-notes"
+  | "dictionary"
+  | "upload"
+  | "integrations";
 
 export interface ControlPanelNavItem {
   id: ControlPanelView;
@@ -28,6 +44,15 @@ export function useControlPanelNavItems(): ControlPanelNavItem[] {
     { id: "insights", label: t("sidebar.insights"), icon: BarChart3 },
     ...(agentAllowed
       ? [{ id: "chat" as const, label: t("sidebar.chat"), icon: MessageSquare }]
+      : []),
+    ...(agentAllowed
+      ? [
+          {
+            id: "interview" as const,
+            label: t("sidebar.interview"),
+            icon: Monitor,
+          },
+        ]
       : []),
     { id: "personal-notes", label: t("sidebar.notes"), icon: NotebookPen },
     ...(policyActionsAllowed

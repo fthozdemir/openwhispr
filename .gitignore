@@ -322,3 +322,9 @@ src/assets/fonts/yowza/*.otf
 
 # Local scratch output from the Superpowers Claude Code plugin (SDD fix reports etc.).
 .superpowers/
+
+# Graphify generated output (keep local, can be regenerated)
+graphify-out/
+
+# Graphify generated output (keep local, can be regenerated)
+graphify-out/

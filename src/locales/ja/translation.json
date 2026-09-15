@@ -1455,6 +1455,10 @@
         "description": "外観、サウンド、起動設定",
         "label": "環境設定"
       },
+      "interview": {
+        "description": "プロンプト、コンテキスト圧縮、ホットキー",
+        "label": "面接"
+      },
       "hotkeys": {
         "description": "ディクテーションホットキーと起動モード",
         "label": "ホットキー"
@@ -1483,6 +1487,23 @@
     "title": "設定"
   },
   "settingsPage": {
+    "interview": {
+      "systemPromptTitle": "面接用システムプロンプト",
+      "systemPromptDescription": "3 つの面接回答コマンドすべてで使われる動作指示です。応答プロトコルは別途適用されます。",
+      "compactionTitle": "コンテキストの自動圧縮",
+      "compactionDescription": "圧縮は独立して実行され、回答リクエストを待ったりキャンセルしたりすることはありません。",
+      "contextBudget": "コンテキスト予算",
+      "contextBudgetDescription": "会話履歴のおおよそのトークン予算です。要約のサイズはこの値から決まります。ユーザーデータとシステムプロンプトは含まれません。",
+      "shortcutsTitle": "面接ホットキー",
+      "shortcutsDescription": "これらのホットキーは面接ウィンドウが開いている間だけ登録されます。",
+      "conversationShortcut": "会話から回答",
+      "screenshotShortcut": "スクリーンショットから回答",
+      "screenshotConversationShortcut": "スクリーンショットと会話",
+      "shortcutInUse": "このホットキーは別の面接アクションで使用されています。",
+      "windowTitle": "面接ウィンドウ",
+      "windowDescription": "画面上で回答が読みにくい場合は、背景の不透明度を上げてください。",
+      "backgroundOpacity": "背景の不透明度"
+    },
     "unifiedBilling": {
       "workspaceTitle": "ワークスペースの請求",
       "workspaceDescription": "各ワークスペースには独自のプラン、シート、請求管理者があります。",
@@ -3431,6 +3452,7 @@
     }
   },
   "sidebar": {
+    "interview": "面接",
     "insights": "統計",
     "home": "ホーム",
     "notes": "ノート",
@@ -4122,6 +4144,47 @@
     "activeTarget": "使用中の翻訳先言語",
     "removeTarget": "{{language}}を削除",
     "maxTargets": "最大{{max}}言語"
+  },
+  "interviewSetup": {
+    "title": "面接の準備",
+    "description": "面接モードを開く前にセッションのコンテキストを選択します。",
+    "aiModel": "AI モデル",
+    "aiModelSameAsChat": "面接モードはチャットと同じ AI モデルを使用します。",
+    "changeModel": "変更",
+    "modelNotSelected": "モデルが選択されていません",
+    "captureWindow": "キャプチャするウィンドウ",
+    "noWindows": "利用できるウィンドウがありません",
+    "refreshWindows": "キャプチャウィンドウを更新",
+    "userData": "ユーザーデータ",
+    "savedOnDevice": "このデバイスに保存",
+    "userDataPlaceholder": "履歴書、職務の背景、会社のメモ、その他の個人情報を貼り付けます…",
+    "userDataLarge": "ユーザーデータは約 {{tokens}} トークンで、推奨の {{limit}} を超えています。回答が遅くなり、リクエストがコンテキスト予算を超える可能性があります。",
+    "start": "面接を開始",
+    "starting": "開始しています…",
+    "stop": "停止",
+    "continue": "再開",
+    "errors": {
+      "listWindows": "ウィンドウの一覧を取得できませんでした。",
+      "selectWindow": "キャプチャするウィンドウを選択してください。",
+      "openFailed": "面接モードを開けませんでした。",
+      "alreadyOpen": "面接セッションはすでに開いています。",
+      "missingSetup": "面接の設定を利用できません。このウィンドウを閉じ、面接タブからもう一度開始してください。"
+    }
+  },
+  "interviewWindow": {
+    "liveConversation": "ライブ会話",
+    "collapseLiveConversation": "ライブ会話を折りたたむ",
+    "expandLiveConversation": "ライブ会話を展開",
+    "moveWindow": "ウィンドウを移動"
+  },
+  "interviewPhoneRemote": {
+    "title": "面接リモコン",
+    "description": "次の回答に使うコンテキストを選択してください。",
+    "conversation": "会話",
+    "screenshot": "スクリーンショット",
+    "screenshotConversation": "スクリーンショット + 会話",
+    "urlLabel": "スマートフォンURL",
+    "unavailable": "ローカルネットワークでスマートフォンリモコンを利用できません。"
   },
   "meetingNotification": {
     "title": "会議を検出しました",

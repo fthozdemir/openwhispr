@@ -1155,6 +1155,37 @@ declare global {
       }>;
       hideWindow: () => Promise<void>;
       showDictationPanel: () => Promise<void>;
+      openInterviewWindow?: (launchConfig: {
+        captureSourceId: string;
+        userData: string;
+      }) => Promise<{ success: boolean; error?: string }>;
+      getInterviewLaunchConfig?: () => Promise<{
+        captureSourceId: string;
+        userData: string;
+      } | null>;
+      closeInterviewWindow?: () => Promise<{ success: boolean }>;
+      getInterviewWindowBounds?: () => Promise<Electron.Rectangle | null>;
+      resizeInterviewWindow?: (
+        width: number,
+        height: number
+      ) => Promise<{ success: boolean; bounds?: Electron.Rectangle; error?: string }>;
+      moveInterviewWindow?: (x: number, y: number) => Promise<{ success: boolean; error?: string }>;
+      setInterviewWindowInteractivity?: (interactive: boolean) => Promise<{ success: boolean }>;
+      registerInterviewHotkeys?: (hotkeys: {
+        conversation: string;
+        screenshot: string;
+        screenshotConversation: string;
+      }) => Promise<{ success: boolean; error?: string }>;
+      getInterviewPhoneRemote?: () => Promise<{
+        success: boolean;
+        url?: string;
+        urls?: string[];
+        error?: string;
+      }>;
+      onInterviewAction?: (
+        callback: (action: "conversation" | "screenshot" | "screenshot-conversation") => void
+      ) => () => void;
+      onInterviewCloseRequested?: (callback: () => void) => () => void;
       captureDictationTarget?: () => Promise<{ success: boolean; pid: number | null }>;
       onToggleDictation: (callback: () => void) => () => void;
       onToggleVoiceAgent?: (callback: () => void) => () => void;
@@ -2266,6 +2297,16 @@ declare global {
       checkScreenRecordingAccess?: () => Promise<ScreenRecordingAccessResult>;
       requestScreenRecordingAccess?: () => Promise<ScreenRecordingAccessResult>;
       captureScreenContext?: () => Promise<ScreenContextImage | null>;
+      listInterviewCaptureSources?: () => Promise<{
+        success: boolean;
+        sources: Array<{ id: string; name: string }>;
+        error?: string;
+      }>;
+      captureInterviewSource?: (sourceId: string) => Promise<{
+        success: boolean;
+        image?: ScreenContextImage;
+        error?: string;
+      }>;
       setScreenContextEnabled?: (enabled: boolean) => Promise<{ success: boolean }>;
       toggleMediaPlayback?: () => Promise<boolean>;
       pauseMediaPlayback?: () => Promise<boolean>;

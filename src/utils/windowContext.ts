@@ -5,5 +5,10 @@ export const isControlPanelWindow = (): boolean => {
   return new URLSearchParams(window.location.search).get("panel") === "true";
 };
 
+export const isInterviewWindow = (): boolean => {
+  if (typeof window === "undefined") return false;
+  return new URLSearchParams(window.location.search).get("interview") === "true";
+};
+
 export const isDictationPanelWindow = (): boolean =>
-  typeof window !== "undefined" && !isControlPanelWindow();
+  typeof window !== "undefined" && !isControlPanelWindow() && !isInterviewWindow();

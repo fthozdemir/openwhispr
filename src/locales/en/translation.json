@@ -1552,6 +1552,10 @@
         "description": "Appearance, sounds & startup",
         "label": "Preferences"
       },
+      "interview": {
+        "description": "Prompt, context compaction, and shortcuts",
+        "label": "Interview"
+      },
       "hotkeys": {
         "description": "Dictation hotkey & activation",
         "label": "Hotkeys"
@@ -1576,6 +1580,23 @@
     "title": "Settings"
   },
   "settingsPage": {
+    "interview": {
+      "systemPromptTitle": "Interview system prompt",
+      "systemPromptDescription": "Behavior instructions used by all three Interview answer commands. The response protocol is enforced separately.",
+      "compactionTitle": "Automatic context compaction",
+      "compactionDescription": "Compaction runs independently and never waits on or cancels an answer request.",
+      "contextBudget": "Context budget",
+      "contextBudgetDescription": "Approximate token budget for conversation history; the summary size is derived from it. User data and the system prompt are not counted.",
+      "shortcutsTitle": "Interview shortcuts",
+      "shortcutsDescription": "These shortcuts are registered only while the Interview window is open.",
+      "conversationShortcut": "Answer from conversation",
+      "screenshotShortcut": "Answer from screenshot",
+      "screenshotConversationShortcut": "Screenshot and conversation",
+      "shortcutInUse": "This shortcut is already used by another Interview action.",
+      "windowTitle": "Interview window",
+      "windowDescription": "Raise the background opacity if answers are hard to read over your screen.",
+      "backgroundOpacity": "Background opacity"
+    },
     "workspace": {
       "title": "Workspace",
       "description": "Collaborate with teammates, share notes, and manage workspace access in one place.",
@@ -2752,6 +2773,7 @@
     }
   },
   "sidebar": {
+    "interview": "Interview",
     "home": "Home",
     "insights": "Insights",
     "notes": "Notes",
@@ -4122,6 +4144,47 @@
     "activeTarget": "Active target language",
     "removeTarget": "Remove {{language}}",
     "maxTargets": "Up to {{max}} languages"
+  },
+  "interviewSetup": {
+    "title": "Prepare your interview",
+    "description": "Choose the session context before opening Interview Mode.",
+    "aiModel": "AI model",
+    "aiModelSameAsChat": "Interview Mode uses the same AI model as Chat.",
+    "changeModel": "Change",
+    "modelNotSelected": "No model selected",
+    "captureWindow": "Capture window",
+    "noWindows": "No windows available",
+    "refreshWindows": "Refresh capture windows",
+    "userData": "User data",
+    "savedOnDevice": "Saved on this device",
+    "userDataPlaceholder": "Paste CV, role context, company notes, or other personal context…",
+    "userDataLarge": "User data is about {{tokens}} tokens, above the recommended {{limit}}. Every answer gets slower, and requests can exceed the context budget.",
+    "start": "Start Interview",
+    "starting": "Starting…",
+    "stop": "Stop",
+    "continue": "Continue",
+    "errors": {
+      "listWindows": "Could not list windows.",
+      "selectWindow": "Select a window to capture.",
+      "openFailed": "Could not open Interview Mode.",
+      "alreadyOpen": "An Interview session is already open.",
+      "missingSetup": "Interview setup is unavailable. Close this window and start again from the Interview tab."
+    }
+  },
+  "interviewWindow": {
+    "liveConversation": "Live conversation",
+    "collapseLiveConversation": "Collapse live conversation",
+    "expandLiveConversation": "Expand live conversation",
+    "moveWindow": "Move window"
+  },
+  "interviewPhoneRemote": {
+    "title": "Interview remote",
+    "description": "Choose the context for the next answer.",
+    "conversation": "Conversation",
+    "screenshot": "Screenshot",
+    "screenshotConversation": "Screenshot + conversation",
+    "urlLabel": "Phone URL",
+    "unavailable": "The phone remote is unavailable on the local network."
   },
   "meetingNotification": {
     "title": "Meeting detected",

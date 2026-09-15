@@ -65,14 +65,17 @@ test("Sway XWayland uses notification type only for focusless overlays", () => {
     {
       main: windowConfig.MAIN_WINDOW_CONFIG.type,
       notification: windowConfig.NOTIFICATION_WINDOW_CONFIG.type,
+      interview: windowConfig.INTERVIEW_WINDOW_CONFIG.type,
     },
     {
       main: "notification",
       notification: "notification",
+      interview: "notification",
     }
   );
   assert.equal(windowConfig.MAIN_WINDOW_CONFIG.focusable, false);
   assert.equal(windowConfig.NOTIFICATION_WINDOW_CONFIG.focusable, false);
+  assert.equal(windowConfig.INTERVIEW_WINDOW_CONFIG.focusable, false);
 });
 
 test("onboarding sizing does not resize the normal control panel", () => {
@@ -87,6 +90,25 @@ test("onboarding sizing does not resize the normal control panel", () => {
   );
   assert.deepEqual(windowConfig.ONBOARDING_WINDOW_SIZES.COMPACT, { width: 480, height: 624 });
   assert.deepEqual(windowConfig.ONBOARDING_WINDOW_SIZES.EXPANDED, { width: 1000, height: 740 });
+});
+
+test("Interview window is a focusless, resizable, transparent always-on-top surface", () => {
+  const { INTERVIEW_WINDOW_CONFIG } = loadWindowConfig({ platform: "darwin", environment: {} });
+
+  assert.equal(INTERVIEW_WINDOW_CONFIG.focusable, false);
+  assert.equal(INTERVIEW_WINDOW_CONFIG.acceptFirstMouse, true);
+  assert.equal(INTERVIEW_WINDOW_CONFIG.transparent, true);
+  assert.equal(INTERVIEW_WINDOW_CONFIG.alwaysOnTop, true);
+  assert.equal(INTERVIEW_WINDOW_CONFIG.resizable, true);
+  assert.equal(INTERVIEW_WINDOW_CONFIG.frame, false);
+  assert.equal(INTERVIEW_WINDOW_CONFIG.type, "panel");
+});
+
+test("the dictation pill accepts the first click under Electron's option name", () => {
+  const { MAIN_WINDOW_CONFIG } = loadWindowConfig({ platform: "darwin", environment: {} });
+
+  assert.equal(MAIN_WINDOW_CONFIG.acceptFirstMouse, true);
+  assert.equal(Object.hasOwn(MAIN_WINDOW_CONFIG, "acceptsFirstMouse"), false);
 });
 
 test("the overlay resolver preserves every unaffected platform and session", () => {

@@ -1508,6 +1508,10 @@
         "description": "Apariencia, sonidos e inicio",
         "label": "Preferencias"
       },
+      "interview": {
+        "description": "Prompt, compactación del contexto y atajos",
+        "label": "Entrevista"
+      },
       "hotkeys": {
         "description": "Atajo de dictado y activación",
         "label": "Atajos"
@@ -1536,6 +1540,23 @@
     "title": "Ajustes"
   },
   "settingsPage": {
+    "interview": {
+      "systemPromptTitle": "Prompt del sistema de la entrevista",
+      "systemPromptDescription": "Instrucciones de comportamiento para los tres comandos de respuesta de la entrevista. El protocolo de respuesta se aplica por separado.",
+      "compactionTitle": "Compactación automática del contexto",
+      "compactionDescription": "La compactación se ejecuta de forma independiente y nunca espera ni cancela una solicitud de respuesta.",
+      "contextBudget": "Presupuesto de contexto",
+      "contextBudgetDescription": "Presupuesto aproximado de tokens para el historial de la conversación; el tamaño del resumen se deriva de él. Los datos del usuario y el prompt del sistema no cuentan.",
+      "shortcutsTitle": "Atajos de la entrevista",
+      "shortcutsDescription": "Estos atajos solo se registran mientras la ventana de la entrevista está abierta.",
+      "conversationShortcut": "Responder desde la conversación",
+      "screenshotShortcut": "Responder desde la captura",
+      "screenshotConversationShortcut": "Captura y conversación",
+      "shortcutInUse": "Este atajo ya lo usa otra acción de la entrevista.",
+      "windowTitle": "Ventana de la entrevista",
+      "windowDescription": "Aumenta la opacidad del fondo si las respuestas cuestan de leer sobre tu pantalla.",
+      "backgroundOpacity": "Opacidad del fondo"
+    },
     "unifiedBilling": {
       "workspaceTitle": "Facturación del espacio de trabajo",
       "workspaceDescription": "Cada espacio de trabajo tiene su propio plan, asientos y responsable de facturación.",
@@ -3484,6 +3505,7 @@
     }
   },
   "sidebar": {
+    "interview": "Entrevista",
     "insights": "Estadísticas",
     "home": "Inicio",
     "notes": "Notas",
@@ -4122,6 +4144,47 @@
     "activeTarget": "Idioma de destino activo",
     "removeTarget": "Quitar {{language}}",
     "maxTargets": "Hasta {{max}} idiomas"
+  },
+  "interviewSetup": {
+    "title": "Prepara tu entrevista",
+    "description": "Elige el contexto de la sesión antes de abrir el modo Entrevista.",
+    "aiModel": "Modelo de IA",
+    "aiModelSameAsChat": "El modo Entrevista usa el mismo modelo de IA que el chat.",
+    "changeModel": "Cambiar",
+    "modelNotSelected": "Ningún modelo seleccionado",
+    "captureWindow": "Ventana que capturar",
+    "noWindows": "No hay ventanas disponibles",
+    "refreshWindows": "Actualizar ventanas de captura",
+    "userData": "Datos del usuario",
+    "savedOnDevice": "Guardado en este dispositivo",
+    "userDataPlaceholder": "Pega tu CV, el contexto del puesto, notas de la empresa u otro contexto personal…",
+    "userDataLarge": "Los datos del usuario ocupan unos {{tokens}} tokens, más de los {{limit}} recomendados. Cada respuesta será más lenta y las solicitudes pueden superar el presupuesto de contexto.",
+    "start": "Iniciar entrevista",
+    "starting": "Iniciando…",
+    "stop": "Detener",
+    "continue": "Continuar",
+    "errors": {
+      "listWindows": "No se pudieron listar las ventanas.",
+      "selectWindow": "Selecciona una ventana para capturar.",
+      "openFailed": "No se pudo abrir el modo Entrevista.",
+      "alreadyOpen": "Ya hay una sesión de entrevista abierta.",
+      "missingSetup": "La configuración de la entrevista no está disponible. Cierra esta ventana y vuelve a iniciarla desde la pestaña Entrevista."
+    }
+  },
+  "interviewWindow": {
+    "liveConversation": "Conversación en vivo",
+    "collapseLiveConversation": "Contraer conversación en vivo",
+    "expandLiveConversation": "Expandir conversación en vivo",
+    "moveWindow": "Mover ventana"
+  },
+  "interviewPhoneRemote": {
+    "title": "Control remoto de entrevista",
+    "description": "Elige el contexto para la siguiente respuesta.",
+    "conversation": "Conversación",
+    "screenshot": "Captura de pantalla",
+    "screenshotConversation": "Captura + conversación",
+    "urlLabel": "URL del teléfono",
+    "unavailable": "El control remoto del teléfono no está disponible en la red local."
   },
   "meetingNotification": {
     "title": "Reunión detectada",

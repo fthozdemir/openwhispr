@@ -13,7 +13,7 @@ import { mirrorActiveAccountScope } from "./lib/accountScopeMirror";
 import { usePolicyStore } from "./stores/policyStore";
 import { resolveSettledControlPanelWindowMode } from "./utils/controlPanelWindowMode.ts";
 import { resolveMacAccessibilityReadiness } from "./utils/macAccessibilityReadiness.ts";
-import { isControlPanelWindow } from "./utils/windowContext.ts";
+import { isControlPanelWindow, isInterviewWindow } from "./utils/windowContext.ts";
 
 // Either marker means the flow is mid-way: the legacy step key is kept for
 // back-compat, the v2 session is what the rebuilt flow actually persists.
@@ -23,10 +23,19 @@ const isOnboardingInProgress = () =>
 
 const ControlPanel = React.lazy(() => import("./components/ControlPanel.tsx"));
 const OnboardingFlow = React.lazy(() => import("./components/OnboardingFlow.tsx"));
+const InterviewWindow = React.lazy(() => import("./components/InterviewWindow.tsx"));
 
 export default function AppRouter() {
   useTheme();
   const params = window.location.search;
+
+  if (isInterviewWindow()) {
+    return (
+      <Suspense fallback={<LoadingFallback />}>
+        <InterviewWindow />
+      </Suspense>
+    );
+  }
 
   if (params.includes("meeting-notification=true")) {
     return <MeetingNotificationOverlay />;

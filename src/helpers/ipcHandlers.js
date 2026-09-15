@@ -1354,6 +1354,33 @@ class IPCHandlers {
   }
 
   setupHandlers() {
+    ipcMain.handle("open-interview-window", (_event, launchConfig) =>
+      this.windowManager.createInterviewWindow(launchConfig)
+    );
+    ipcMain.handle("get-interview-launch-config", () =>
+      this.windowManager.getInterviewLaunchConfig()
+    );
+    ipcMain.handle("close-interview-window", () => this.windowManager.closeInterviewWindow());
+    ipcMain.handle("set-interview-window-interactivity", (event, interactive) => {
+      this.windowManager.setInterviewWindowInteractivity(event.sender, Boolean(interactive));
+      return { success: true };
+    });
+    ipcMain.handle("get-interview-window-bounds", () =>
+      this.windowManager.getInterviewWindowBounds()
+    );
+    ipcMain.handle("resize-interview-window", (_event, width, height) =>
+      this.windowManager.resizeInterviewWindow(width, height)
+    );
+    ipcMain.handle("move-interview-window", (_event, x, y) =>
+      this.windowManager.moveInterviewWindow(x, y)
+    );
+    ipcMain.handle("register-interview-hotkeys", (_event, hotkeys) =>
+      this.windowManager.registerInterviewHotkeys(hotkeys)
+    );
+    ipcMain.handle("get-interview-phone-remote", () =>
+      this.windowManager.getInterviewPhoneRemoteInfo()
+    );
+
     ipcMain.handle("onboarding-set-window-mode", (_event, mode) =>
       this.windowManager.setOnboardingWindowMode(mode)
     );
@@ -5654,6 +5681,52 @@ class IPCHandlers {
       return capturePromise;
     });
 
+    ipcMain.handle("list-interview-capture-sources", async () => {
+      const access = screenContextCapture.getAccessResult();
+      if (!access.granted) {
+        return {
+          success: false,
+          sources: [],
+          error: access.needsRelaunch
+            ? "Restart OpenWhispr to use the newly granted Screen Recording permission."
+            : "Screen Recording permission is required.",
+        };
+      }
+      const interviewSourceId = this.windowManager.getInterviewWindowMediaSourceId();
+      const sources = (await screenContextCapture.listWindowSources()).filter(
+        (source) => source.id !== interviewSourceId
+      );
+      return { success: true, sources };
+    });
+
+    ipcMain.handle("capture-interview-source", async (event, sourceId) => {
+      if (typeof sourceId !== "string" || !sourceId) {
+        return { success: false, error: "Select a window to capture." };
+      }
+
+      const authHeaders = await getAuthHeader(event);
+      if (authHeaders.Authorization || authHeaders.Cookie) {
+        const snapshot = await Promise.race([
+          workspacePolicyManager.getPolicy({
+            expectedAuthGeneration: tokenStore.getState().generation,
+            authHeaders,
+          }),
+          new Promise((resolve) => setTimeout(() => resolve(null), 1500)),
+        ]);
+        if (snapshot && isScreenContextBlocked(snapshot)) {
+          return {
+            success: false,
+            error: "Screen capture is restricted by your organization.",
+          };
+        }
+      }
+
+      const image = await screenContextCapture.captureWindow(sourceId);
+      return image
+        ? { success: true, image }
+        : { success: false, error: "The selected window is no longer available." };
+    });
+
     // Snapshot the launch-time TCC status so a mid-session grant (which macOS
     // only honors after a relaunch) is detectable even if the renderer never
     // checked before the user granted.
@@ -9364,21 +9437,34 @@ class IPCHandlers {
         const authHeader = await getAuthHeader(event);
         if (!Object.keys(authHeader).length) throw new Error("Not authenticated");
 
+        const body = JSON.stringify({
+          messages,
+          systemPrompt: opts.systemPrompt,
+          tools: opts.tools,
+          ...(opts.screenContext ? { screenContext: opts.screenContext } : {}),
+          sessionId: this.sessionId,
+          clientType: "desktop",
+          appVersion: app.getVersion(),
+        });
+        // TEMP: log the outgoing agent stream body exactly as sent; remove after debugging.
+        // Debug-only: the redaction pass copies the whole body, screenshots included.
+        if (debugLogger.isDebugEnabled()) {
+          debugLogger.debug(
+            [
+              `Outgoing HTTP request: POST ${apiUrl}/api/agent/stream`,
+              "----- BODY (raw, as sent) -----",
+              body.replace(/[A-Za-z0-9+/]{1000,}={0,2}/g, (m) => `<base64 ${m.length} chars>`),
+              "----- END -----",
+            ].join("\n")
+          );
+        }
         const response = await proxyFetch(`${apiUrl}/api/agent/stream`, {
           method: "POST",
           headers: withPolicyHeaders({
             "Content-Type": "application/json",
             ...authHeader,
           }),
-          body: JSON.stringify({
-            messages,
-            systemPrompt: opts.systemPrompt,
-            tools: opts.tools,
-            ...(opts.screenContext ? { screenContext: opts.screenContext } : {}),
-            sessionId: this.sessionId,
-            clientType: "desktop",
-            appVersion: app.getVersion(),
-          }),
+          body,
           signal: controller.signal,
         });
 

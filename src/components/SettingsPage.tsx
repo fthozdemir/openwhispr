@@ -91,6 +91,7 @@ import LinuxPttSetupInfo from "./ui/LinuxPttSetupInfo";
 import { Toggle } from "./ui/toggle";
 import DeveloperSection from "./DeveloperSection";
 import ChatAgentSettings from "./settings/ChatAgentSettings";
+import InterviewSettings from "./settings/InterviewSettings";
 import DictationAgentSettings from "./settings/DictationAgentSettings";
 import DictationTranslationSettings from "./settings/DictationTranslationSettings";
 import InferenceConfigEditor from "./settings/InferenceConfigEditor";
@@ -163,6 +164,7 @@ export type SettingsSectionType =
   | "workspace"
   | "general"
   | "hotkeys"
+  | "interview"
   | "speechToText"
   | "llms"
   | "privacyData"
@@ -4137,6 +4139,9 @@ EOF`,
             </div>
           </div>
         );
+
+      case "interview":
+        return <InterviewSettings />;
 
       case "speechToText":
       case "llms":

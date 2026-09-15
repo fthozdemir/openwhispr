@@ -12,6 +12,7 @@ import {
   Shield,
   ShieldCheck,
   Users,
+  Monitor,
 } from "./icons";
 import SidebarModal, { type SidebarItem } from "./ui/SidebarModal";
 import SettingsPage, { AccountAvatar, SettingsSectionType } from "./SettingsPage";
@@ -96,6 +97,13 @@ export default function SettingsModal({ open, onOpenChange, initialSection }: Se
         label: t("settingsModal.sections.hotkeys.label"),
         icon: Keyboard,
         description: t("settingsModal.sections.hotkeys.description"),
+        group: t("settingsModal.groups.app"),
+      },
+      {
+        id: "interview",
+        label: t("settingsModal.sections.interview.label"),
+        icon: Monitor,
+        description: t("settingsModal.sections.interview.description"),
         group: t("settingsModal.groups.app"),
       },
       {

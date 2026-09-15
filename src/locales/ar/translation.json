@@ -2313,6 +2313,23 @@
     }
   },
   "settingsPage": {
+    "interview": {
+      "systemPromptTitle": "موجّه النظام للمقابلة",
+      "systemPromptDescription": "تعليمات السلوك المستخدمة في أوامر إجابة المقابلة الثلاثة. يُطبَّق بروتوكول الاستجابة بشكل منفصل.",
+      "compactionTitle": "الضغط التلقائي للسياق",
+      "compactionDescription": "يعمل الضغط بشكل مستقل ولا ينتظر طلب إجابة أو يلغيه أبدًا.",
+      "contextBudget": "ميزانية السياق",
+      "contextBudgetDescription": "ميزانية تقريبية من الرموز لسجل المحادثة، ويُحسب حجم الملخص منها. لا تُحتسب بيانات المستخدم وموجّه النظام.",
+      "shortcutsTitle": "اختصارات المقابلة",
+      "shortcutsDescription": "تُسجَّل هذه الاختصارات فقط أثناء فتح نافذة المقابلة.",
+      "conversationShortcut": "الإجابة من المحادثة",
+      "screenshotShortcut": "الإجابة من لقطة الشاشة",
+      "screenshotConversationShortcut": "لقطة الشاشة والمحادثة",
+      "shortcutInUse": "هذا الاختصار مستخدم بالفعل في إجراء آخر من إجراءات المقابلة.",
+      "windowTitle": "نافذة المقابلة",
+      "windowDescription": "ارفع عتامة الخلفية إذا كانت الإجابات صعبة القراءة فوق شاشتك.",
+      "backgroundOpacity": "عتامة الخلفية"
+    },
     "workspace": {
       "title": "مساحة العمل",
       "description": "تعاون مع زملائك، وشارك الملاحظات، وقم بإدارة الوصول إلى مساحة العمل في مكان واحد.",
@@ -3846,6 +3863,10 @@
         "description": "المظهر والأصوات وبدء التشغيل",
         "label": "التفضيلات"
       },
+      "interview": {
+        "description": "الموجّه وضغط السياق والاختصارات",
+        "label": "المقابلة"
+      },
       "hotkeys": {
         "description": "اختصارات الإملاء والتفعيل",
         "label": "اختصارات لوحة المفاتيح"
@@ -3870,6 +3891,7 @@
     "title": "الإعدادات"
   },
   "sidebar": {
+    "interview": "المقابلة",
     "home": "الرئيسية",
     "notes": "الملاحظات",
     "upload": "رفع",
@@ -4244,6 +4266,47 @@
     "activeTarget": "اللغة المستهدفة النشطة",
     "removeTarget": "إزالة {{language}}",
     "maxTargets": "ما يصل إلى {{max}} لغات"
+  },
+  "interviewSetup": {
+    "title": "الاستعداد للمقابلة",
+    "description": "اختر سياق الجلسة قبل فتح وضع المقابلة.",
+    "aiModel": "نموذج الذكاء الاصطناعي",
+    "aiModelSameAsChat": "يستخدم وضع المقابلة نموذج الذكاء الاصطناعي نفسه المستخدم في الدردشة.",
+    "changeModel": "تغيير",
+    "modelNotSelected": "لم يتم اختيار نموذج",
+    "captureWindow": "نافذة الالتقاط",
+    "noWindows": "لا توجد نوافذ متاحة",
+    "refreshWindows": "تحديث نوافذ الالتقاط",
+    "userData": "بيانات المستخدم",
+    "savedOnDevice": "محفوظة على هذا الجهاز",
+    "userDataPlaceholder": "الصق السيرة الذاتية أو سياق الوظيفة أو ملاحظات الشركة أو أي سياق شخصي آخر…",
+    "userDataLarge": "تبلغ بيانات المستخدم نحو {{tokens}} رمزًا، وهذا أكثر من الحد الموصى به {{limit}}. ستصبح كل إجابة أبطأ، وقد تتجاوز الطلبات ميزانية السياق.",
+    "start": "بدء المقابلة",
+    "starting": "جارٍ البدء…",
+    "stop": "إيقاف",
+    "continue": "متابعة",
+    "errors": {
+      "listWindows": "تعذر عرض قائمة النوافذ.",
+      "selectWindow": "اختر نافذة لالتقاطها.",
+      "openFailed": "تعذر فتح وضع المقابلة.",
+      "alreadyOpen": "توجد جلسة مقابلة مفتوحة بالفعل.",
+      "missingSetup": "إعداد المقابلة غير متاح. أغلق هذه النافذة وابدأ من جديد من علامة تبويب المقابلة."
+    }
+  },
+  "interviewWindow": {
+    "liveConversation": "المحادثة المباشرة",
+    "collapseLiveConversation": "طي المحادثة المباشرة",
+    "expandLiveConversation": "توسيع المحادثة المباشرة",
+    "moveWindow": "نقل النافذة"
+  },
+  "interviewPhoneRemote": {
+    "title": "جهاز التحكم بالمقابلة",
+    "description": "اختر السياق للإجابة التالية.",
+    "conversation": "المحادثة",
+    "screenshot": "لقطة الشاشة",
+    "screenshotConversation": "لقطة الشاشة + المحادثة",
+    "urlLabel": "رابط الهاتف",
+    "unavailable": "جهاز التحكم عبر الهاتف غير متاح على الشبكة المحلية."
   },
   "meetingNotification": {
     "title": "تم اكتشاف اجتماع",

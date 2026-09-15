@@ -33,10 +33,14 @@ Module._load = function loadWindowManagerWithStubs(request, parent, isMain) {
           this.webContents = {
             on: (event, listener) => this.webContentsListeners.set(event, listener),
             send: (channel, payload) => this.sent.push({ channel, payload }),
+            setWindowOpenHandler: () => undefined,
           };
           createdBrowserWindows.push(this);
         }
         on(event, listener) {
+          this.windowListeners.set(event, listener);
+        }
+        once(event, listener) {
           this.windowListeners.set(event, listener);
         }
         setContentProtection(value) {
@@ -91,7 +95,12 @@ Module._load = function loadWindowManagerWithStubs(request, parent, isMain) {
     };
   }
   if (request === "./debugLogger")
-    return { warn: () => undefined, debug: () => undefined, log: () => undefined };
+    return {
+      info: () => undefined,
+      warn: () => undefined,
+      debug: () => undefined,
+      log: () => undefined,
+    };
   if (request === "./hotkeyManager") {
     const FakeHotkeyManager = class {
       unregisterAll() {}
@@ -194,6 +203,109 @@ function makeManager(windowState) {
   manager.hideAgentDictationPill = () => undefined;
   return { manager, calls: fake.calls };
 }
+
+test("Interview actions reach the renderer without changing desktop focus", () => {
+  const manager = new WindowManager();
+  const calls = [];
+  manager.interviewWindow = {
+    isDestroyed: () => false,
+    isVisible: () => true,
+    focus: () => calls.push("focus"),
+    webContents: {
+      send: (channel, action) => calls.push({ channel, action }),
+    },
+  };
+
+  assert.equal(manager.dispatchInterviewAction("screenshot"), true);
+  assert.deepEqual(calls, [{ channel: "interview-action", action: "screenshot" }]);
+});
+
+test("Interview actions remain available while the Interview window is hidden", () => {
+  const manager = new WindowManager();
+  const calls = [];
+  manager.interviewWindow = {
+    isDestroyed: () => false,
+    isVisible: () => false,
+    webContents: {
+      send: (channel, action) => calls.push({ channel, action }),
+    },
+  };
+
+  assert.equal(manager.dispatchInterviewAction("conversation"), true);
+  assert.deepEqual(calls, [{ channel: "interview-action", action: "conversation" }]);
+});
+
+test("the Interview window opens without focus and starts click-through on macOS", async () => {
+  const manager = new WindowManager();
+  const originalPlatform = Object.getOwnPropertyDescriptor(process, "platform");
+  Object.defineProperty(process, "platform", { value: "darwin" });
+  try {
+    const result = await manager.createInterviewWindow({
+      captureSourceId: "window:1:0",
+      userData: "",
+    });
+    assert.equal(result.success, true);
+
+    const win = createdBrowserWindows.at(-1);
+    const calls = [];
+    win.show = () => calls.push("show");
+    win.showInactive = () => calls.push("showInactive");
+    win.focus = () => calls.push("focus");
+    win.setIgnoreMouseEvents = (ignore, opts) => calls.push({ ignore, opts });
+    win.windowListeners.get("ready-to-show")();
+
+    assert.deepEqual(calls, [{ ignore: true, opts: { forward: true } }, "showInactive"]);
+  } finally {
+    Object.defineProperty(process, "platform", originalPlatform);
+  }
+});
+
+test("the Interview window toggles macOS click-through only for its own renderer", () => {
+  const manager = new WindowManager();
+  const ignoreCalls = [];
+  const webContents = {};
+  manager.interviewWindow = {
+    isDestroyed: () => false,
+    webContents,
+    setIgnoreMouseEvents: (ignore, opts) => ignoreCalls.push({ ignore, opts }),
+  };
+
+  const originalPlatform = Object.getOwnPropertyDescriptor(process, "platform");
+  Object.defineProperty(process, "platform", { value: "darwin" });
+  try {
+    manager.setInterviewWindowInteractivity({}, true);
+    manager.setInterviewWindowInteractivity(webContents, true);
+    manager.setInterviewWindowInteractivity(webContents, false);
+    // Windows/Linux keep normal hit-testing (forward is unreliable/ignored).
+    Object.defineProperty(process, "platform", { value: "win32" });
+    manager.setInterviewWindowInteractivity(webContents, true);
+  } finally {
+    Object.defineProperty(process, "platform", originalPlatform);
+  }
+
+  assert.deepEqual(ignoreCalls, [
+    { ignore: false, opts: undefined },
+    { ignore: true, opts: { forward: true } },
+  ]);
+});
+
+test("the Interview window moves to whole pixels and never above the work area", () => {
+  const manager = new WindowManager();
+  const positions = [];
+  manager.interviewWindow = {
+    isDestroyed: () => false,
+    setPosition: (x, y) => positions.push([x, y]),
+  };
+
+  assert.equal(manager.moveInterviewWindow(120.4, 80.6).success, true);
+  assert.equal(manager.moveInterviewWindow(-300, -40).success, true);
+  assert.equal(manager.moveInterviewWindow(Number.NaN, 10).success, false);
+
+  assert.deepEqual(positions, [
+    [120, 81],
+    [-300, 0],
+  ]);
+});
 
 test("the Assistant response context menu exposes native Copy only for selected text", () => {
   builtMenus.length = 0;

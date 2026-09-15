@@ -281,7 +281,7 @@ test("a vision scope with its own endpoint never borrows the agent's key", async
 // the tab the user actually edits — and gates screenshots exactly like the
 // dictation route does.
 const imageWired = (providerId) =>
-  ["openai", "anthropic", "gemini", "openwhispr"].includes(providerId);
+  ["openai", "anthropic", "gemini", "openrouter", "openwhispr"].includes(providerId);
 const panelSettings = {
   ...baseSettings,
   isSignedIn: false,
@@ -315,6 +315,25 @@ test("typed chat surfaces stay on the Chat scope even when the Voice Assistant s
   assert.equal(config.scope, "chatIntelligence");
   assert.equal(config.model, "claude-sonnet-4-5");
   assert.equal(attachScreenContext, true, "Chat's own model can see images");
+});
+
+test("an OpenRouter-prefixed vision model keeps a typed chat screenshot", () => {
+  const { config, attachScreenContext } = resolveChatStreamingInference(
+    {
+      ...panelSettings,
+      chatAgentProvider: "openrouter",
+      chatAgentModel: "google/gemini-3.5-flash-lite",
+    },
+    {
+      hasScreenContext: true,
+      isProviderImageWired: imageWired,
+    }
+  );
+
+  assert.equal(config.scope, "chatIntelligence");
+  assert.equal(config.provider, "openrouter");
+  assert.equal(config.model, "google/gemini-3.5-flash-lite");
+  assert.equal(attachScreenContext, true);
 });
 
 test("an unreachable Voice Assistant scope falls the panel back to the Chat scope", () => {

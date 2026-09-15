@@ -2,7 +2,7 @@ const path = require("path");
 const { getLinuxSessionInfo } = require("./linuxSession");
 const { ASSISTANT_PANEL_SIZE_LIMITS } = require("./voiceSurfaceGeometry");
 
-const FOCUSLESS_OVERLAY_ROLES = new Set(["main", "notification"]);
+const FOCUSLESS_OVERLAY_ROLES = new Set(["main", "notification", "interview"]);
 
 function usesGnomeOverlayPolicy(linuxSession) {
   return (
@@ -200,7 +200,7 @@ const MAIN_WINDOW_CONFIG = {
   visibleOnAllWorkspaces: process.platform !== "win32",
   fullScreenable: false,
   hasShadow: false,
-  acceptsFirstMouse: true,
+  acceptFirstMouse: true,
   type: OVERLAY_WINDOW_TYPES.main,
 };
 
@@ -283,6 +283,37 @@ const NOTIFICATION_WINDOW_CONFIG = {
   },
   visibleOnAllWorkspaces: process.platform !== "win32",
   type: OVERLAY_WINDOW_TYPES.notification,
+};
+
+const INTERVIEW_WINDOW_CONFIG = {
+  width: 960,
+  height: 680,
+  minWidth: 400,
+  minHeight: 320,
+  title: "OpenWhispr Interview",
+  backgroundColor: "#00000000",
+  webPreferences: {
+    preload: path.join(__dirname, "..", "..", "preload.js"),
+    nodeIntegration: false,
+    contextIsolation: true,
+    sandbox: false,
+    webSecurity: false,
+    spellcheck: false,
+    backgroundThrottling: false,
+  },
+  frame: false,
+  transparent: true,
+  alwaysOnTop: true,
+  resizable: true,
+  show: false,
+  skipTaskbar: true,
+  // Never takes focus: its buttons act while the app beneath keeps the keyboard.
+  focusable: false,
+  visibleOnAllWorkspaces: process.platform !== "win32",
+  fullScreenable: false,
+  hasShadow: false,
+  acceptFirstMouse: true,
+  type: resolveOverlayWindowType({ role: "interview", platform: process.platform, linuxSession }),
 };
 
 class WindowPositionUtil {
@@ -379,6 +410,7 @@ class WindowPositionUtil {
 module.exports = {
   MAIN_WINDOW_CONFIG,
   CONTROL_PANEL_CONFIG,
+  INTERVIEW_WINDOW_CONFIG,
   ONBOARDING_WINDOW_SIZES,
   NOTIFICATION_WINDOW_CONFIG,
   ASSISTANT_PANEL_SIZE_LIMITS,

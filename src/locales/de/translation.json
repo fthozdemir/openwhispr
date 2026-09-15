@@ -1552,6 +1552,10 @@
         "description": "Darstellung, Töne & Start",
         "label": "Einstellungen"
       },
+      "interview": {
+        "description": "Prompt, Kontextverdichtung und Hotkeys",
+        "label": "Interview"
+      },
       "hotkeys": {
         "description": "Diktat-Hotkey & Aktivierung",
         "label": "Hotkeys"
@@ -1576,6 +1580,23 @@
     "title": "Einstellungen"
   },
   "settingsPage": {
+    "interview": {
+      "systemPromptTitle": "Interview-Systemprompt",
+      "systemPromptDescription": "Verhaltensanweisungen für alle drei Interview-Antwortbefehle. Das Antwortprotokoll wird separat erzwungen.",
+      "compactionTitle": "Automatische Kontextverdichtung",
+      "compactionDescription": "Die Verdichtung läuft unabhängig und wartet nie auf eine Antwortanfrage oder bricht sie ab.",
+      "contextBudget": "Kontextbudget",
+      "contextBudgetDescription": "Ungefähres Token-Budget für den Gesprächsverlauf; die Größe der Zusammenfassung wird daraus abgeleitet. Benutzerdaten und Systemprompt zählen nicht mit.",
+      "shortcutsTitle": "Interview-Hotkeys",
+      "shortcutsDescription": "Diese Hotkeys sind nur registriert, solange das Interview-Fenster geöffnet ist.",
+      "conversationShortcut": "Antwort aus dem Gespräch",
+      "screenshotShortcut": "Antwort aus dem Bildschirmfoto",
+      "screenshotConversationShortcut": "Bildschirmfoto und Gespräch",
+      "shortcutInUse": "Dieser Hotkey wird bereits von einer anderen Interview-Aktion verwendet.",
+      "windowTitle": "Interview-Fenster",
+      "windowDescription": "Erhöhe die Hintergrunddeckkraft, wenn die Antworten vor deinem Bildschirm schwer lesbar sind.",
+      "backgroundOpacity": "Hintergrunddeckkraft"
+    },
     "workspace": {
       "title": "Workspace",
       "description": "Arbeiten Sie zusammen, teilen Sie Notizen und verwalten Sie den Workspace-Zugriff an einem Ort.",
@@ -2878,6 +2899,7 @@
     }
   },
   "sidebar": {
+    "interview": "Interview",
     "insights": "Statistiken",
     "home": "Startseite",
     "notes": "Notizen",
@@ -4122,6 +4144,47 @@
     "activeTarget": "Aktive Zielsprache",
     "removeTarget": "{{language}} entfernen",
     "maxTargets": "Bis zu {{max}} Sprachen"
+  },
+  "interviewSetup": {
+    "title": "Interview vorbereiten",
+    "description": "Wähle den Sitzungskontext aus, bevor du den Interview-Modus öffnest.",
+    "aiModel": "KI-Modell",
+    "aiModelSameAsChat": "Der Interview-Modus nutzt dasselbe KI-Modell wie der Chat.",
+    "changeModel": "Ändern",
+    "modelNotSelected": "Kein Modell ausgewählt",
+    "captureWindow": "Aufnahmefenster",
+    "noWindows": "Keine Fenster verfügbar",
+    "refreshWindows": "Aufnahmefenster aktualisieren",
+    "userData": "Benutzerdaten",
+    "savedOnDevice": "Auf diesem Gerät gespeichert",
+    "userDataPlaceholder": "Lebenslauf, Rollenkontext, Unternehmensnotizen oder anderen persönlichen Kontext einfügen…",
+    "userDataLarge": "Die Benutzerdaten umfassen etwa {{tokens}} Tokens und damit mehr als die empfohlenen {{limit}}. Jede Antwort wird langsamer, und Anfragen können das Kontextbudget überschreiten.",
+    "start": "Interview starten",
+    "starting": "Wird gestartet…",
+    "stop": "Stopp",
+    "continue": "Fortsetzen",
+    "errors": {
+      "listWindows": "Fenster konnten nicht aufgelistet werden.",
+      "selectWindow": "Wähle ein Fenster für die Aufnahme aus.",
+      "openFailed": "Der Interview-Modus konnte nicht geöffnet werden.",
+      "alreadyOpen": "Eine Interview-Sitzung ist bereits geöffnet.",
+      "missingSetup": "Die Interview-Einrichtung ist nicht verfügbar. Schließe dieses Fenster und starte erneut über den Interview-Tab."
+    }
+  },
+  "interviewWindow": {
+    "liveConversation": "Live-Gespräch",
+    "collapseLiveConversation": "Live-Gespräch einklappen",
+    "expandLiveConversation": "Live-Gespräch ausklappen",
+    "moveWindow": "Fenster verschieben"
+  },
+  "interviewPhoneRemote": {
+    "title": "Interview-Fernbedienung",
+    "description": "Wähle den Kontext für die nächste Antwort.",
+    "conversation": "Gespräch",
+    "screenshot": "Bildschirmfoto",
+    "screenshotConversation": "Bildschirmfoto + Gespräch",
+    "urlLabel": "Telefon-URL",
+    "unavailable": "Die Telefon-Fernbedienung ist im lokalen Netzwerk nicht verfügbar."
   },
   "meetingNotification": {
     "title": "Meeting erkannt",

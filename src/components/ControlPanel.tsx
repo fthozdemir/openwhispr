@@ -103,6 +103,7 @@ const DictionaryView = React.lazy(() => import("./DictionaryView"));
 const UploadAudioView = React.lazy(() => import("./notes/UploadAudioView"));
 const IntegrationsView = React.lazy(() => import("./IntegrationsView"));
 const ChatView = React.lazy(() => import("./chat/ChatView"));
+const InterviewSetup = React.lazy(() => import("./InterviewSetup"));
 const CommandSearch = React.lazy(() => import("./CommandSearch"));
 
 interface ControlPanelProps {
@@ -1006,7 +1007,9 @@ export default function ControlPanel({ initialSettingsSection }: ControlPanelPro
         >
           <ControlPanelSidebar
             activeView={activeView}
-            onViewChange={setActiveView}
+            onViewChange={(view) => {
+              setActiveView(view);
+            }}
             onOpenSettings={() => {
               setSettingsSection(undefined);
               setShowSettings(true);
@@ -1203,6 +1206,16 @@ export default function ControlPanel({ initialSettingsSection }: ControlPanelPro
               {activeView === "chat" && agentAllowedByPolicy && (
                 <Suspense fallback={null}>
                   <ChatView />
+                </Suspense>
+              )}
+              {activeView === "interview" && agentAllowedByPolicy && (
+                <Suspense fallback={null}>
+                  <InterviewSetup
+                    onOpenModelSettings={() => {
+                      setSettingsSection("agentConfig");
+                      setShowSettings(true);
+                    }}
+                  />
                 </Suspense>
               )}
               {activeView === "personal-notes" && (

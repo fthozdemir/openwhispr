@@ -16,10 +16,27 @@ test("a packaged dictation window ignores control in its install path", async (t
     },
   };
 
-  const { isControlPanelWindow, isDictationPanelWindow } = await load();
+  const { isControlPanelWindow, isDictationPanelWindow, isInterviewWindow } = await load();
 
   assert.equal(isControlPanelWindow(), false);
   assert.equal(isDictationPanelWindow(), true);
+  assert.equal(isInterviewWindow(), false);
+});
+
+test("the Interview route is neither the control panel nor the dictation panel", async (t) => {
+  const originalWindow = globalThis.window;
+  t.after(() => {
+    globalThis.window = originalWindow;
+  });
+  globalThis.window = {
+    location: { pathname: "/index.html", search: "?panel=true&interview=true" },
+  };
+
+  const { isControlPanelWindow, isDictationPanelWindow, isInterviewWindow } = await load();
+
+  assert.equal(isControlPanelWindow(), true);
+  assert.equal(isInterviewWindow(), true);
+  assert.equal(isDictationPanelWindow(), false);
 });
 
 test("only the explicit panel=true query selects the control panel", async (t) => {

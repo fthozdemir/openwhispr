@@ -1455,6 +1455,10 @@
         "description": "外觀、音效與啟動",
         "label": "偏好設定"
       },
+      "interview": {
+        "description": "提示詞、上下文壓縮與快捷鍵",
+        "label": "面試"
+      },
       "hotkeys": {
         "description": "聽寫快捷鍵與啟用模式",
         "label": "快捷鍵"
@@ -1483,6 +1487,23 @@
     "title": "設定"
   },
   "settingsPage": {
+    "interview": {
+      "systemPromptTitle": "面試系統提示詞",
+      "systemPromptDescription": "三個面試回答指令共用的行為指示。回答協定會另外強制執行。",
+      "compactionTitle": "自動上下文壓縮",
+      "compactionDescription": "壓縮獨立執行，絕不會等待或取消回答請求。",
+      "contextBudget": "上下文預算",
+      "contextBudgetDescription": "對話紀錄的大約 token 預算，摘要大小由此推算。使用者資料與系統提示詞不計入。",
+      "shortcutsTitle": "面試快捷鍵",
+      "shortcutsDescription": "這些快捷鍵只會在面試視窗開啟時註冊。",
+      "conversationShortcut": "根據對話回答",
+      "screenshotShortcut": "根據截圖回答",
+      "screenshotConversationShortcut": "截圖與對話",
+      "shortcutInUse": "此快捷鍵已被另一個面試動作使用。",
+      "windowTitle": "面試視窗",
+      "windowDescription": "如果回答在螢幕上難以閱讀，請提高背景不透明度。",
+      "backgroundOpacity": "背景不透明度"
+    },
     "unifiedBilling": {
       "workspaceTitle": "工作區帳單",
       "workspaceDescription": "每個工作區都有自己的方案、席次與帳單負責人。",
@@ -3431,6 +3452,7 @@
     }
   },
   "sidebar": {
+    "interview": "面試",
     "insights": "統計",
     "home": "首頁",
     "notes": "筆記",
@@ -4122,6 +4144,47 @@
     "activeTarget": "目前目標語言",
     "removeTarget": "移除{{language}}",
     "maxTargets": "最多 {{max}} 種語言"
+  },
+  "interviewSetup": {
+    "title": "準備面試",
+    "description": "開啟面試模式前，請選擇本次工作階段的內容。",
+    "aiModel": "AI 模型",
+    "aiModelSameAsChat": "面試模式使用與聊天相同的 AI 模型。",
+    "changeModel": "變更",
+    "modelNotSelected": "未選擇模型",
+    "captureWindow": "擷取視窗",
+    "noWindows": "沒有可用的視窗",
+    "refreshWindows": "重新整理擷取視窗",
+    "userData": "使用者資料",
+    "savedOnDevice": "儲存在此裝置上",
+    "userDataPlaceholder": "貼上履歷、職務背景、公司備註或其他個人內容…",
+    "userDataLarge": "使用者資料約 {{tokens}} 個 token，超過建議的 {{limit}}。每次回答都會變慢，請求也可能超出上下文預算。",
+    "start": "開始面試",
+    "starting": "正在啟動…",
+    "stop": "停止",
+    "continue": "繼續",
+    "errors": {
+      "listWindows": "無法列出視窗。",
+      "selectWindow": "請選擇要擷取的視窗。",
+      "openFailed": "無法開啟面試模式。",
+      "alreadyOpen": "面試工作階段已開啟。",
+      "missingSetup": "面試設定無法使用。請關閉此視窗，並從面試分頁重新開始。"
+    }
+  },
+  "interviewWindow": {
+    "liveConversation": "即時對話",
+    "collapseLiveConversation": "收合即時對話",
+    "expandLiveConversation": "展開即時對話",
+    "moveWindow": "移動視窗"
+  },
+  "interviewPhoneRemote": {
+    "title": "面試遙控器",
+    "description": "選擇下一次回答使用的內容。",
+    "conversation": "對話",
+    "screenshot": "螢幕截圖",
+    "screenshotConversation": "螢幕截圖 + 對話",
+    "urlLabel": "手機網址",
+    "unavailable": "本機網路中無法使用手機遙控器。"
   },
   "meetingNotification": {
     "title": "偵測到會議",

@@ -1983,6 +1983,7 @@ function performSyncTeardown() {
     cliBridge.stop().catch(() => {});
     cliBridge = null;
   }
+  if (windowManager) void windowManager.stopInterviewPhoneRemote();
   if (hotkeyManager) {
     hotkeyManager.unregisterAll();
   } else {

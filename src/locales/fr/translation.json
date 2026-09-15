@@ -1552,6 +1552,10 @@
         "description": "Apparence, sons & démarrage",
         "label": "Préférences"
       },
+      "interview": {
+        "description": "Prompt, compactage du contexte et raccourcis",
+        "label": "Entretien"
+      },
       "hotkeys": {
         "description": "Raccourci de dictée et activation",
         "label": "Raccourcis"
@@ -1576,6 +1580,23 @@
     "title": "Paramètres"
   },
   "settingsPage": {
+    "interview": {
+      "systemPromptTitle": "Prompt système de l’entretien",
+      "systemPromptDescription": "Instructions de comportement utilisées par les trois commandes de réponse de l’entretien. Le protocole de réponse est appliqué séparément.",
+      "compactionTitle": "Compactage automatique du contexte",
+      "compactionDescription": "Le compactage s’exécute indépendamment et n’attend ni n’annule jamais une demande de réponse.",
+      "contextBudget": "Budget de contexte",
+      "contextBudgetDescription": "Budget approximatif de tokens pour l’historique de la conversation ; la taille du résumé en découle. Les données utilisateur et le prompt système ne sont pas comptés.",
+      "shortcutsTitle": "Raccourcis de l’entretien",
+      "shortcutsDescription": "Ces raccourcis ne sont enregistrés que lorsque la fenêtre d’entretien est ouverte.",
+      "conversationShortcut": "Répondre depuis la conversation",
+      "screenshotShortcut": "Répondre depuis la capture d’écran",
+      "screenshotConversationShortcut": "Capture et conversation",
+      "shortcutInUse": "Ce raccourci est déjà utilisé par une autre action de l’entretien.",
+      "windowTitle": "Fenêtre de l’entretien",
+      "windowDescription": "Augmentez l’opacité du fond si les réponses sont difficiles à lire sur votre écran.",
+      "backgroundOpacity": "Opacité du fond"
+    },
     "workspace": {
       "title": "Espace de travail",
       "description": "Collaborez, partagez des notes et gérez l'accès à l'espace de travail au même endroit.",
@@ -2878,6 +2899,7 @@
     }
   },
   "sidebar": {
+    "interview": "Entretien",
     "insights": "Statistiques",
     "home": "Accueil",
     "notes": "Notes",
@@ -4122,6 +4144,47 @@
     "activeTarget": "Langue cible active",
     "removeTarget": "Supprimer {{language}}",
     "maxTargets": "Jusqu’à {{max}} langues"
+  },
+  "interviewSetup": {
+    "title": "Préparer votre entretien",
+    "description": "Choisissez le contexte de la session avant d’ouvrir le mode Entretien.",
+    "aiModel": "Modèle d’IA",
+    "aiModelSameAsChat": "Le mode Entretien utilise le même modèle d’IA que le chat.",
+    "changeModel": "Modifier",
+    "modelNotSelected": "Aucun modèle sélectionné",
+    "captureWindow": "Fenêtre à capturer",
+    "noWindows": "Aucune fenêtre disponible",
+    "refreshWindows": "Actualiser les fenêtres de capture",
+    "userData": "Données utilisateur",
+    "savedOnDevice": "Enregistré sur cet appareil",
+    "userDataPlaceholder": "Collez votre CV, le contexte du poste, des notes sur l’entreprise ou tout autre contexte personnel…",
+    "userDataLarge": "Les données utilisateur représentent environ {{tokens}} tokens, au-delà des {{limit}} recommandés. Chaque réponse sera plus lente et les requêtes peuvent dépasser le budget de contexte.",
+    "start": "Démarrer l’entretien",
+    "starting": "Démarrage…",
+    "stop": "Arrêter",
+    "continue": "Reprendre",
+    "errors": {
+      "listWindows": "Impossible de répertorier les fenêtres.",
+      "selectWindow": "Sélectionnez une fenêtre à capturer.",
+      "openFailed": "Impossible d’ouvrir le mode Entretien.",
+      "alreadyOpen": "Une session d’entretien est déjà ouverte.",
+      "missingSetup": "La configuration de l’entretien n’est pas disponible. Fermez cette fenêtre et recommencez depuis l’onglet Entretien."
+    }
+  },
+  "interviewWindow": {
+    "liveConversation": "Conversation en direct",
+    "collapseLiveConversation": "Réduire la conversation en direct",
+    "expandLiveConversation": "Développer la conversation en direct",
+    "moveWindow": "Déplacer la fenêtre"
+  },
+  "interviewPhoneRemote": {
+    "title": "Télécommande d’entretien",
+    "description": "Choisissez le contexte de la prochaine réponse.",
+    "conversation": "Conversation",
+    "screenshot": "Capture d’écran",
+    "screenshotConversation": "Capture + conversation",
+    "urlLabel": "URL du téléphone",
+    "unavailable": "La télécommande du téléphone n’est pas disponible sur le réseau local."
   },
   "meetingNotification": {
     "title": "Réunion détectée",
