@@ -35,9 +35,10 @@ import {
   type InterviewAnswerMode,
 } from "../helpers/interviewContext";
 import {
+  INTERVIEW_SCREENSHOT_UNSUPPORTED_ERROR,
   cancelInterviewAnswer,
   compactInterviewHistory,
-  interviewModelSupportsScreenshot,
+  interviewCanSendScreenshot,
   streamInterviewAnswer,
 } from "../helpers/interviewInference";
 import { readInterviewSettings, type InterviewSettings } from "../helpers/interviewSettings";
@@ -463,8 +464,8 @@ export default function InterviewWindow() {
           setError("Select a window to capture.");
           return;
         }
-        if (!interviewModelSupportsScreenshot()) {
-          setError("Selected Chat Intelligence model does not support images.");
+        if (!interviewCanSendScreenshot()) {
+          setError(INTERVIEW_SCREENSHOT_UNSUPPORTED_ERROR);
           return;
         }
         setAnswerState("capturing");

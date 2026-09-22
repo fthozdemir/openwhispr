@@ -4152,6 +4152,8 @@
     "aiModelSameAsChat": "O modo Entrevista usa o mesmo modelo de IA do chat.",
     "changeModel": "Alterar",
     "modelNotSelected": "Nenhum modelo selecionado",
+    "screenshotVisionWarning": "As respostas por captura de tela enviam a janela capturada a este modelo como imagem. O OpenWhispr não verifica se o modelo aceita entrada de imagem, então confirme que ele aceita.",
+    "screenshotUnsupported": "Este provedor não consegue enviar imagens, então as respostas por captura de tela não funcionarão. As respostas a partir da conversa continuam funcionando.",
     "captureWindow": "Janela para capturar",
     "noWindows": "Nenhuma janela disponível",
     "refreshWindows": "Atualizar janelas de captura",

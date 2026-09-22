@@ -4152,6 +4152,8 @@
     "aiModelSameAsChat": "面接モードはチャットと同じ AI モデルを使用します。",
     "changeModel": "変更",
     "modelNotSelected": "モデルが選択されていません",
+    "screenshotVisionWarning": "スクリーンショットからの回答では、キャプチャしたウィンドウを画像としてこのモデルに送信します。OpenWhispr はモデルが画像入力に対応しているかを確認しないため、ご自身で確認してください。",
+    "screenshotUnsupported": "このプロバイダーは画像を送信できないため、スクリーンショットからの回答は使えません。会話からの回答は引き続き利用できます。",
     "captureWindow": "キャプチャするウィンドウ",
     "noWindows": "利用できるウィンドウがありません",
     "refreshWindows": "キャプチャウィンドウを更新",

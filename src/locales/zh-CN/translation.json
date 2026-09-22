@@ -4152,6 +4152,8 @@
     "aiModelSameAsChat": "面试模式使用与聊天相同的 AI 模型。",
     "changeModel": "更改",
     "modelNotSelected": "未选择模型",
+    "screenshotVisionWarning": "截图回答会将捕获的窗口作为图片发送给此模型。OpenWhispr 不会检查该模型是否支持图片输入，请自行确认。",
+    "screenshotUnsupported": "此提供商无法发送图片，因此截图回答将无法使用。基于对话的回答仍可正常使用。",
     "captureWindow": "捕获窗口",
     "noWindows": "没有可用窗口",
     "refreshWindows": "刷新捕获窗口",

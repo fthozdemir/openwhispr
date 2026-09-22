@@ -4152,6 +4152,8 @@
     "aiModelSameAsChat": "La modalità Colloquio usa lo stesso modello IA della chat.",
     "changeModel": "Cambia",
     "modelNotSelected": "Nessun modello selezionato",
+    "screenshotVisionWarning": "Le risposte da screenshot inviano la finestra acquisita a questo modello come immagine. OpenWhispr non verifica se il modello accetta immagini in input, quindi assicurati che lo faccia.",
+    "screenshotUnsupported": "Questo provider non può inviare immagini, quindi le risposte da screenshot non funzioneranno. Le risposte dalla conversazione funzionano comunque.",
     "captureWindow": "Finestra da acquisire",
     "noWindows": "Nessuna finestra disponibile",
     "refreshWindows": "Aggiorna le finestre di acquisizione",

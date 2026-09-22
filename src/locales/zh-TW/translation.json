@@ -4152,6 +4152,8 @@
     "aiModelSameAsChat": "面試模式使用與聊天相同的 AI 模型。",
     "changeModel": "變更",
     "modelNotSelected": "未選擇模型",
+    "screenshotVisionWarning": "截圖回答會將擷取的視窗以圖片形式傳送給此模型。OpenWhispr 不會檢查該模型是否支援圖片輸入，請自行確認。",
+    "screenshotUnsupported": "此供應商無法傳送圖片，因此截圖回答將無法使用。根據對話的回答仍可正常使用。",
     "captureWindow": "擷取視窗",
     "noWindows": "沒有可用的視窗",
     "refreshWindows": "重新整理擷取視窗",

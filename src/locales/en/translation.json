@@ -4152,6 +4152,8 @@
     "aiModelSameAsChat": "Interview Mode uses the same AI model as Chat.",
     "changeModel": "Change",
     "modelNotSelected": "No model selected",
+    "screenshotVisionWarning": "Screenshot answers send the captured window to this model as an image. OpenWhispr doesn't check whether the model accepts image input, so make sure it does.",
+    "screenshotUnsupported": "This provider can't send images, so screenshot answers won't work. Answers from the conversation still work.",
     "captureWindow": "Capture window",
     "noWindows": "No windows available",
     "refreshWindows": "Refresh capture windows",

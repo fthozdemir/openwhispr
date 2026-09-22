@@ -9,6 +9,7 @@ import {
   estimateInterviewTokens,
   getInterviewUserDataMaxLength,
 } from "../helpers/interviewContext";
+import { interviewCanSendScreenshot } from "../helpers/interviewInference";
 import { readInterviewSettings } from "../helpers/interviewSettings";
 import { useCopyFeedback } from "../hooks/useCopyFeedback";
 import { useLocalStorage } from "../hooks/useLocalStorage";
@@ -53,6 +54,10 @@ export default function InterviewSetup({ onOpenModelSettings }: InterviewSetupPr
       : chatModel.mode === "providers"
         ? getProviderDisplayName(chatModel.provider)
         : modeLabel;
+  // Vision support is not checked for the user's own model; OpenWhispr Cloud
+  // routes screenshots to a vision model server-side, so it needs no warning.
+  const canSendScreenshot = useSettingsStore(interviewCanSendScreenshot);
+  const showScreenshotWarning = chatModel.mode !== "openwhispr";
   const [captureSources, setCaptureSources] = useState<CaptureSource[]>([]);
   const [captureSourceId, setCaptureSourceId] = useState("");
   const [phoneRemoteUrl, setPhoneRemoteUrl] = useState("");
@@ -235,6 +240,17 @@ export default function InterviewSetup({ onOpenModelSettings }: InterviewSetupPr
             </Button>
           )}
         </div>
+
+        {showScreenshotWarning && (
+          <p className="mt-2 flex items-start gap-1.5 rounded-md border border-warning/20 bg-warning/8 px-3 py-2 text-xs text-warning dark:border-warning/25 dark:bg-warning/12">
+            <AlertTriangle size={13} className="mt-px shrink-0" />
+            {t(
+              canSendScreenshot
+                ? "interviewSetup.screenshotVisionWarning"
+                : "interviewSetup.screenshotUnsupported"
+            )}
+          </p>
+        )}
 
         <label className="mt-5 block">
           <span className="text-sm font-medium text-foreground">

@@ -143,11 +143,17 @@ export function resolveDictationAgentVisionInference(settings, { isSignedIn = fa
  * `isProviderImageWired` is injected: the provider registry reads Vite env at
  * load, which this helper's callers and tests do not all have.
  *
+ * `requireModelVision: false` skips the registry lookup and trusts the user's
+ * model to see images; the provider must still be image-wired. For surfaces
+ * that tell the user to verify vision themselves, since custom and OpenRouter
+ * models are mostly absent from the registry.
+ *
  * @param {import("../stores/settingsStore").SettingsState} settings
  * @param {{
  *   inferenceScope?: "chatIntelligence" | "dictationAgent",
  *   hasScreenContext?: boolean,
  *   isProviderImageWired?: (providerId: string | undefined) => boolean,
+ *   requireModelVision?: boolean,
  * }} [options]
  * @returns {{
  *   config: import("../stores/settingsStore").ResolvedLLMConfig,
@@ -160,6 +166,7 @@ export function resolveChatStreamingInference(
     inferenceScope = "chatIntelligence",
     hasScreenContext = false,
     isProviderImageWired = () => false,
+    requireModelVision = true,
   } = {}
 ) {
   const onAgentScope =
@@ -185,7 +192,8 @@ export function resolveChatStreamingInference(
       resolveModeProvider({ isCloud, mode: config.mode, provider: config.provider })
     ),
     isCloudAgent: isCloud,
-    baseModelSupportsVision: !!getCloudModel(config.model, config.provider)?.supportsVision,
+    baseModelSupportsVision:
+      !requireModelVision || !!getCloudModel(config.model, config.provider)?.supportsVision,
   });
   if (!useVisionOverride) return { config, attachScreenContext: attach };
   return {

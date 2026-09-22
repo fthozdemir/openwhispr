@@ -2,25 +2,29 @@ import ReasoningService, { type AgentStreamChunk } from "../services/ReasoningSe
 import { providerSupportsImages } from "../services/ai/inferenceProviders";
 import { resolveChatStreamingInference } from "./dictationAgentInference.js";
 import { buildInterviewCompactionRequest } from "./interviewContext";
-import { getSettings } from "../stores/settingsStore";
+import { getSettings, type SettingsState } from "../stores/settingsStore";
 
 export interface InterviewScreenshot {
   data: string;
   mediaType: string;
 }
 
-function resolveInference(hasScreenshot: boolean) {
-  const settings = getSettings();
-  const resolution = resolveChatStreamingInference(settings, {
+export const INTERVIEW_SCREENSHOT_UNSUPPORTED_ERROR =
+  "The selected Chat Intelligence provider cannot send images.";
+
+// The model's vision support is the user's to verify (Interview setup warns
+// about it); only a provider whose client cannot carry images blocks screenshots.
+function resolveInference(settings: SettingsState, hasScreenshot: boolean) {
+  return resolveChatStreamingInference(settings, {
     inferenceScope: "chatIntelligence",
     hasScreenContext: hasScreenshot,
     isProviderImageWired: providerSupportsImages,
+    requireModelVision: false,
   });
-  return { settings, ...resolution };
 }
 
-export function interviewModelSupportsScreenshot(): boolean {
-  return resolveInference(true).attachScreenContext;
+export function interviewCanSendScreenshot(settings: SettingsState = getSettings()): boolean {
+  return resolveInference(settings, true).attachScreenContext;
 }
 
 export async function* streamInterviewAnswer({
@@ -32,9 +36,10 @@ export async function* streamInterviewAnswer({
   request: string;
   screenshot?: InterviewScreenshot | null;
 }): AsyncGenerator<AgentStreamChunk, void, unknown> {
-  const { settings, config, attachScreenContext } = resolveInference(!!screenshot);
+  const settings = getSettings();
+  const { config, attachScreenContext } = resolveInference(settings, !!screenshot);
   if (screenshot && !attachScreenContext) {
-    throw new Error("Selected Chat Intelligence model does not support images.");
+    throw new Error(INTERVIEW_SCREENSHOT_UNSUPPORTED_ERROR);
   }
 
   const isCloud = config.mode === "openwhispr" && settings.isSignedIn;
@@ -79,7 +84,8 @@ export async function compactInterviewHistory({
   transcript: string;
   contextBudgetTokens: number;
 }): Promise<string> {
-  const { settings, config } = resolveInference(false);
+  const settings = getSettings();
+  const { config } = resolveInference(settings, false);
   const isCloud = config.mode === "openwhispr" && settings.isSignedIn;
   const isLan = config.mode === "self-hosted" && !!config.remoteUrl;
   const isCustom = config.mode === "providers" && config.provider === "custom";

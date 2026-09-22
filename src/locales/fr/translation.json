@@ -4152,6 +4152,8 @@
     "aiModelSameAsChat": "Le mode Entretien utilise le même modèle d’IA que le chat.",
     "changeModel": "Modifier",
     "modelNotSelected": "Aucun modèle sélectionné",
+    "screenshotVisionWarning": "Les réponses par capture envoient la fenêtre capturée à ce modèle sous forme d'image. OpenWhispr ne vérifie pas si le modèle accepte les images : assurez-vous qu'il le fait.",
+    "screenshotUnsupported": "Ce fournisseur ne peut pas envoyer d'images, les réponses par capture ne fonctionneront donc pas. Les réponses à partir de la conversation fonctionnent toujours.",
     "captureWindow": "Fenêtre à capturer",
     "noWindows": "Aucune fenêtre disponible",
     "refreshWindows": "Actualiser les fenêtres de capture",

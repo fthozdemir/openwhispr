@@ -158,8 +158,8 @@
     "hardenedRuntime": true,
     "entitlements": "resources/mac/entitlements.mac.plist",
     "entitlementsInherit": "resources/mac/entitlements.mac.plist",
-    "identity": "Gizmo Labs Inc. (T832773L2J)",
-    "notarize": true,
+    "identity": "Apple Development: fozdemir.dev@gmail.com (DW5M8KA64T)",
+    "notarize": false,
     "extraResources": [
       {
         "from": "src/assets/Assets.car",

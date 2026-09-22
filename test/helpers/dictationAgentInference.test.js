@@ -336,6 +336,29 @@ test("an OpenRouter-prefixed vision model keeps a typed chat screenshot", () => 
   assert.equal(attachScreenContext, true);
 });
 
+test("requireModelVision: false trusts an unlisted model but not an image-less provider", () => {
+  const unlisted = {
+    ...panelSettings,
+    chatAgentProvider: "custom",
+    chatAgentModel: "my-finetuned-vl",
+  };
+  const custom = (options) =>
+    resolveChatStreamingInference(unlisted, {
+      hasScreenContext: true,
+      isProviderImageWired: (providerId) => providerId === "custom",
+      ...options,
+    });
+
+  assert.equal(custom().attachScreenContext, false, "the registry gate drops unknown models");
+  assert.equal(custom({ requireModelVision: false }).attachScreenContext, true);
+
+  const { attachScreenContext } = resolveChatStreamingInference(
+    { ...panelSettings, chatAgentProvider: "groq", chatAgentModel: "llama-3.3-70b-versatile" },
+    { hasScreenContext: true, isProviderImageWired: imageWired, requireModelVision: false }
+  );
+  assert.equal(attachScreenContext, false, "a provider that cannot carry images still blocks");
+});
+
 test("an unreachable Voice Assistant scope falls the panel back to the Chat scope", () => {
   const { config, attachScreenContext } = panel(
     {

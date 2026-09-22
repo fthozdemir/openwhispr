@@ -4152,6 +4152,8 @@
     "aiModelSameAsChat": "Der Interview-Modus nutzt dasselbe KI-Modell wie der Chat.",
     "changeModel": "Ändern",
     "modelNotSelected": "Kein Modell ausgewählt",
+    "screenshotVisionWarning": "Antworten per Screenshot senden das erfasste Fenster als Bild an dieses Modell. OpenWhispr prüft nicht, ob das Modell Bildeingaben unterstützt – stelle das bitte selbst sicher.",
+    "screenshotUnsupported": "Dieser Anbieter kann keine Bilder senden, daher funktionieren Antworten per Screenshot nicht. Antworten aus dem Gespräch funktionieren weiterhin.",
     "captureWindow": "Aufnahmefenster",
     "noWindows": "Keine Fenster verfügbar",
     "refreshWindows": "Aufnahmefenster aktualisieren",
